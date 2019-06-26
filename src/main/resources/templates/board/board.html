@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+  	<title>实时票房</title>
+  	<link rel="stylesheet" href="css/board.css" th:href="@{/css/board/board.css}">
+  	
+	</head>
+	<body >
+    <div class="layui-layout layui-layout-admin" style="position: relative;">
+
+
+        <!--引入个公共的头部导航栏-->
+        <div th:replace="common/common :: nav-header"></div>
+
+
+        <div class="layui-container  box" >
+			<div class="layui-row">
+				<div class="layui-col-md10">
+					<dl class="item-list">
+
+						<dd class="item">
+							<div class="item-index">
+								<span class="index-box">1</span>
+							</div>
+							<div class="item-img">
+								<img src="https://p1.meituan.net/movie/d94e5c3054778f6f48bff3a813b0b7cd5300998.jpg@160w_220h_1e_1c" />
+							</div>
+							<div class="item-right">
+								<a href="#">
+
+									<h1>波西米亚狂想曲</h1>
+								</a>
+								
+								<div class="item-stars">
+									<span>主演:</span>
+									<span>拉米·马雷克,本·哈迪</span>
+								</div>
+								<div class="item-time">
+									<span >
+										上映时间：
+									</span>
+									<span>2019-03-22</span>
+								</div>
+								
+							</div>
+							<div class="item-score">
+								
+								<div class="score-box">
+									<span>9.6</span>
+								</div>
+								
+							</div>
+						</dd>
+
+					</dl>
+				</div>
+			</div>
+
+            <div id="page"></div>
+			
+		</div>
+    </div>
+		
+	</body>
+	
+<script>
+layui.use(['table','laypage'], function(){
+  var table = layui.table;
+  var laypage = layui.laypage;
+  var $ = layui.jquery;
+  var url = 'http://localhost/movie/boxoffer2.json';
+
+    //执行一个laypage实例
+    laypage.render({
+        elem: 'page' //注意，这里的 test1 是 ID，不用加 # 号
+        ,count: 250 //数据总数，从服务端得到
+        ,layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
+        ,jump: function(obj){
+            console.log(obj);
+
+
+            // ajax 访问数据
+
+            var curr = obj.curr;       // 当前页
+            var limit = obj.limit;     // 每页显示的数据条数
+            var pages = obj.pages;     // 总共页数
+
+            var start = (curr-1)*limit;
+            var count = limit;
+
+            var url = 'http://localhost/movie/top.json';
+            var dlist = $(".item-list");
+
+            $.ajax({
+
+                url:url,
+                data:{
+                    start:start,
+                    count:count
+                },
+                success:function (data) {
+
+                    // 首先清空后再添加
+                    dlist.empty();
+
+                    console.log(data);
+
+                    $.each(data.subjects,function (i,elem) {
+                        // console.log(i);
+                        // console.log(elem);
+                        var id = elem.id;                   // 电影 id
+                        var rankIndex = start+1 + i;        // 排名
+                        var imgUrl = elem.images.large;     // 海报
+                        var name = elem.title;              // 电影名
+                        var casts = elem.casts;             // 主演列表，是一个对象数组
+                        var directors = elem.directors;     // 导演列表
+                        var year = elem.year;               // 上映时间
+						var score = elem.rating.average; 	// 电影平均分
+
+						var direStr = ''; 					// 拼接导演字符串
+
+                        $.each(directors,function (i,elem) {
+
+                            var s = '<a href="/celebrity/'+elem.id+'">'+elem.name+'</a>'
+                            direStr += s;
+
+                        });
+
+						var castsStr = ''; 					// 拼接演员字符串
+						$.each(casts,function (i,elem) {
+
+						    var s = '<a href="/celebrity/'+elem.id+'">'+elem.name+'</a>'
+							castsStr += s;
+
+                        });
+
+                        var str = '<dd class="item">\n' +
+                            '\t\t\t\t\t\t\t<div class="item-index">\n' +
+                            '\t\t\t\t\t\t\t\t<span class="index-box">'+rankIndex+'</span>\n' +
+                            '\t\t\t\t\t\t\t</div>\n' +
+                            '\t\t\t\t\t\t\t<div class="item-img">\n' +
+                            '\t\t\t\t\t\t\t\t<a href="/movie/subject/'+id+'">' +
+							'\t\t\t\t\t\t\t\t  <img src="'+ imgUrl +'" title="'+name+'" />' +
+							'				</a>' +
+                            '\t\t\t\t\t\t\t</div>\n' +
+                            '\t\t\t\t\t\t\t<div class="item-right">\n' +
+                            '\t\t\t\t\t\t\t\t<a href="#">\n' +
+                            '\t\t\t\t\t\t\t\t\t<a href="/movie/subject/'+id+' "> <h1>'+name+'</h1></a>\n' +
+                            '\t\t\t\t\t\t\t\t</a>\n' +
+                            '\t\t\t\t\t\t\t\t\n' +
+                            '\t\t\t\t\t\t\t\t<div class="item-stars">\n' +
+                            '\t\t\t\t\t\t\t\t\t<span>主演:</span>\n' +
+                            '\t\t\t\t\t\t\t\t\t<span>'+castsStr+'</span>\n' +
+                            '\t\t\t\t\t\t\t\t</div>\n' +
+                            '\t\t\t\t\t\t\t\t<div class="item-time">\n' +
+
+                            '\t\t\t\t\t\t\t\t\t<span>导演:</span>\n' +
+                            '\t\t\t\t\t\t\t\t\t<span>'+direStr+'</span>\n' +
+                            '\t\t\t\t\t\t\t\t</div>\n' +
+
+
+                            '\t\t\t\t\t\t\t\t<div class="item-time">\n' +
+                            '\t\t\t\t\t\t\t\t\t<span >\n' +
+                            '\t\t\t\t\t\t\t\t\t\t上映时间：\n' +
+                            '\t\t\t\t\t\t\t\t\t</span>\n' +
+                            '\t\t\t\t\t\t\t\t\t<span>'+year+'</span>\n' +
+                            '\t\t\t\t\t\t\t\t</div>\n' +
+                            '\t\t\t\t\t\t\t\t\n' +
+                            '\t\t\t\t\t\t\t</div>\n' +
+                            '\t\t\t\t\t\t\t<div class="item-score">\n' +
+                            '\t\t\t\t\t\t\t\t\n' +
+                            '\t\t\t\t\t\t\t\t<div class="score-box">\n' +
+                            '\t\t\t\t\t\t\t\t\t<span>'+score+'</span>\n' +
+                            '\t\t\t\t\t\t\t\t</div>\n' +
+                            '\t\t\t\t\t\t\t\t\n' +
+                            '\t\t\t\t\t\t\t</div>\n' +
+                            '\t\t\t\t\t\t</dd>';
+
+
+                        dlist.append(str);
+
+                    });
+
+                }
+            });
+
+        }
+    });
+ 
+ 
+  
+});
+</script>
+	
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+    <title th:text="${newsItem.title}">开始使用layui</title>
+
+    <link rel="stylesheet" href="../css/news-details.css" th:href="@{/css/news/news-details.css}"/>
+</head>
+<body>
+
+
+<div class="layui-layout layui-layout-admin" style="position: relative;">
+
+
+
+    <!--判断 是否是管理员登入-->
+
+    <div th:replace="common/common :: nav-header" ></div>
+
+
+    <!--引入个公共的头部导航栏-->
+
+    <div class="layui-container top70">
+
+        <div class="layui-row">
+
+            <div class="layui-col-md8">
+                <div class="title-container" style="margin: 0 auto;border: 1px solid green;">
+
+                    <h1 class="title" th:text="${newsItem.title}"> 《雷霆沙赞！》“英雄的秘密”版预告，斗反派藏身份少年遭遇考验</h1>
+
+                    <div class="subinfo">
+                        <span th:text="${newsItem.date}">03-31 11:21</span>
+                    </div>
+
+                </div>
+
+
+                <div class="news-content" th:utext="${newsItem.content}">
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

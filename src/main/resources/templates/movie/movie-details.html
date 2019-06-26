@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+    <title>电影详情</title>
+
+    <link rel="stylesheet" href="../css/movie/movie-details.css" th:href="@{/css/movie/movie-details.css}">
+
+</head>
+<body>
+
+<div class="layui-layout layui-layout-admin" style="position: relative;">
+
+    <!--引入个公共的头部导航栏-->
+    <div th:replace="common/common :: nav-header"></div>
+
+
+    <div class="layui-container top70">
+
+        <!--位置导航：当前所处的位置 -->
+        <div class="position" style="">
+            <a href="#" class="layui-btn layui-btn-normal" style="margin-right: 10px;">当前位置</a>
+            <span class="layui-breadcrumb">
+                    <a href="">首页</a>
+                    <a href="">国际新闻</a>
+                    <a href="">亚太地区</a>
+                    <a><cite>正文</cite></a>
+                </span>
+        </div>
+
+        <!--内容部分-->
+        <div class="main-container" >
+
+            <div class="layui-row">
+
+                <!--影片介绍-->
+                <div class="layui-col-md10" id="movie">
+                    <!--影片介绍-->
+                    <div class="movie-content" >
+                        <span style="display: none" ref="id" id="movieID">[[${id}]]</span>
+                        <div class="movie-img">
+                            <img :src="movie.imgUrl" style="width: 154px; height: 204px;" />
+                        </div>
+
+                        <div class="movie-info">
+                            <h3 style="font-weight: 700;">{{movie.name}}</h3>
+                            <div class="clearfix basicInfo">
+                                        <span class="span_block">
+                                            <span class="font_888">演员：</span>
+                                            <a :href="item.val" target="_blank" v-for="item in movie.actorsList">{{item.key}}</a>
+
+                                        </span>
+                                <span class="span_block">
+                                            <span class="font_888">类型：</span>
+                                    <!--<a href="/ju/list/a&#45;&#45;&#45;&#45;0-">悬疑</a>&nbsp;-->
+                                    <!--<a href="/ju/list/f&#45;&#45;&#45;&#45;0-">剧情</a>&nbsp;-->
+
+                                            <span style="padding-right:5px;" v-for="item in movie.genresList">{{item}}</span>
+
+                                        </span>
+
+                                <span class="span_block">
+                                            <span class="font_888">编剧：</span>
+                                            <a :href="item.val" target="_blank" v-for="item in movie.screenwriterList"
+                                            >{{item.key}} </a>
+                                        </span>
+
+
+                                <span class="span_block"><span class="font_888">导演：</span>
+                                    <!--<a href="/director/4066" target="_blank" title="查看" >五百</a>&nbsp;-->
+                                    <!--<a href="/director/3940" target="_blank" title="查看" >余庆</a>&nbsp;-->
+                                            <a :href="item.val" target="_blank" v-for="item in movie.directorsList"
+                                            >{{item.key}} </a>
+
+                                        </span>
+
+                                <span class="span_block"><span class="font_888">上映日期：</span>
+                                            <span>{{movie.releaseTime}}</span>
+
+                                        </span>
+                                <span class="span_block"><span class="font_888">时长：</span>
+                                        <span>{{movie.duration}}</span>
+
+                                    </span>
+
+                                <span class="span_block">
+                                            <span class="font_888">评分：</span>
+                                            <span id="movie-score"></span>
+                                            <span style="font-weight: 700; color: #FF5722;">
+                                                {{movie.score}} 分
+                                            </span>
+                                        </span>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="comment" >
+                        <div class="">
+                            <a v-if="playingOk" class="layui-btn" :href="item.val|addPlayPrefix" v-for="item in movie.playAddrList">{{item.key}}</a>
+                            <button class="layui-btn layui-btn-danger" v-if="!playingOk">暂无播放源</button>
+                        </div>
+                    </div>
+
+                    <!-- 评价 -->
+                    <div class="comment" id="app">
+                        <div class="">
+                            <!-- <a  class="layui-btn layui-btn-danger">播放</a> -->
+                            <button class="layui-btn layui-btn-normal" id="comment">评价</button>
+                            <span style="padding: 5px;">
+                                        <!--评价：<span id="movie-comment-score"></span>-->
+                                    </span>
+                        </div>
+                    </div>
+
+
+                    <!--介绍 - 演职人员 - 图集-->
+
+                    <div class="intro-content">
+
+                        <!--介绍-->
+                        <div class="layui-tab layui-tab-brief" lay-filter="demo">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this" lay-id="11">介绍 </li>
+                                <li lay-id="22" @click="getAllCelebritiesData()" >演职人员</li>
+                                <li lay-id="33">图集</li>
+                            </ul>
+                            <div class="layui-tab-content">
+                                <!--介绍-->
+                                <div class="layui-tab-item layui-show">
+
+                                    <div class="intro-tab">
+
+                                        <div class="intro-tab-item">
+
+                                            <blockquote class="layui-elem-quote">剧情介绍</blockquote>
+                                            <div class="movie-intro">
+                                                    <span style="text-indent: 2em;">
+                                                       {{movie.movieIntro}}
+                                                    </span>
+                                            </div>
+
+                                        </div>
+
+
+                                        <!--演职人员-->
+                                        <div class="intro-tab-item">
+
+                                            <blockquote class="layui-elem-quote intro-blockquote">演职人员
+                                                <!--点击切换 panel-->
+                                                <a href="#" id="toCelebrityPanelBtn">
+                                                        <span class="all-content">全部
+                                                            <i class="layui-icon layui-icon-right"></i>
+                                                        </span>
+                                                </a>
+                                            </blockquote>
+
+                                            <div class="celebrities">
+
+                                                <div class="celebrity-list">
+                                                    <div class="celebrity-item" v-for="item in movie.celebritysList">
+
+                                                        <div class="celebrity-item-img">
+                                                            <a :href="item.linkUrl | linkFilter">
+                                                                <img :src="item.imgUrl | celebrityImgUrlFilter"
+                                                                     style="width: 128px;height: 180px;"
+                                                                     />
+                                                            </a>
+                                                        </div>
+                                                        <div class="celebrity-item-text">
+                                                            <p>
+                                                                <a :title="item.name" :href="item.linkUrl">{{item.name}}</a>
+                                                            </p>
+                                                            <p>
+                                                                <a :title="item.role" :href="item.linkUrl">{{item.role}}</a>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!--图集-->
+                                        <div class="intro-tab-item">
+
+                                            <blockquote class="layui-elem-quote intro-blockquote">图集
+                                                <a href="#" id="toPhotosPanel">
+                                                        <span class="all-content">全部
+                                                            <i class="layui-icon layui-icon-right"></i>
+                                                        </span>
+                                                </a>
+                                            </blockquote>
+
+                                            <div class="imgs">
+
+                                                <div class="big-img">
+                                                    <img src="holder.js/465x258" />
+                                                </div>
+
+                                                <div class="small-img">
+                                                    <img src="holder.js/126x126" />
+                                                </div>
+                                                <div class="small-img">
+                                                    <img src="holder.js/126x126" />
+                                                </div>
+                                                <div class="small-img">
+                                                    <img src="holder.js/126x126" />
+                                                </div>
+                                                <div class="small-img">
+                                                    <img src="holder.js/126x126" />
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <!--热门短评-->
+                                        <div class="intro-tab-item">
+
+                                            <blockquote class="layui-elem-quote intro-blockquote">热门短评
+                                                <a href="#">
+                                                        <span class="all-content">
+                                                            <!--<button class="layui-btn layui-btn-radius" id="writeComment">写短评</button>-->
+                                                        </span>
+                                                </a>
+                                            </blockquote>
+
+                                            <div class="comment-list-container">
+
+                                                <ul>
+
+                                                    <li class="comment-list-item" th:each="item : ${commList}"
+                                                        th:if="${commList}">
+                                                        <div class="user-info" style="overflow: hidden;">
+                                                            <div class="user-img" style="">
+                                                                <img src="holder.js/50x50"
+                                                                     th:src="@{${item.user.imgUrl}}"
+                                                                     style="border-radius: 50%;" />
+                                                            </div>
+                                                            <div class="img-right">
+                                                                <div>
+                                                                        <span
+                                                                                class="user-name">[[${item.user.username}]]</span>
+                                                                </div>
+                                                                <div class="comment-user-info">
+                                                                        <span
+                                                                                class="comment-time">[[${item.time}]]</span>
+                                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    <span
+                                                                            class="comment_list_item_score">[[${item.score}]]分</span>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="comment-list-item-content">
+                                                            <p style="text-indent: 2em;" th:text="${item.content}">
+                                                                这部前传大黄蜂我评的是十分，电影虽然走的是温情路线，但是一点也阻挡不了大黄蜂的光芒。喜爱大黄蜂的人一定要支持这部电影。唯一一点我真的很不喜欢导演把大黄蜂虐得那么惨，每看一下我心就揪紧的痛一下。简直完全把大黄蜂削弱了不止一丁点。要是有续集请导演们不要再伤害观众最爱的大黄蜂了。故事情节还可以吧。重点是看大黄蜂。知道了很多为什么大黄蜂会失声，为什么会变成科迈罗。冲着大黄蜂，怎么样都值十分。
+                                                            </p>
+                                                        </div>
+
+
+                                                    </li>
+
+
+
+                                                </ul>
+
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+
+
+
+
+                                </div>
+                                <!--演职人员 panel -->
+                                <div class="layui-tab-item" id="celebritiesPanel">
+
+                                    <div class="celebrities-panel">
+
+                                        <div class="celebrity-panel-item">
+                                            <blockquote class="layui-elem-quote"> 导 演</blockquote>
+                                            <div class="actors">
+
+                                                <div class="actor" v-for="item in allCelebrities.directorList">
+                                                    <div class="actor-img">
+                                                        <a :href="item.link | linkFilter">
+                                                            <img style="width:128px; height:170px;" :src="item.imgUrl" />
+                                                        </a>
+                                                    </div>
+                                                    <div class="actor-info">
+                                                        <span :title="item.name">{{item.name}}</span>
+                                                        <span :title="item.role" class="role"> {{item.role}} </span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+
+
+                                        </div>
+
+                                        <div class="celebrity-panel-item">
+                                            <blockquote class="layui-elem-quote"> 演员</blockquote>
+
+                                            <div class="actors">
+
+                                                <div class="actor" v-for="item in allCelebrities.actorList">
+                                                    <div class="actor-img">
+                                                        <a :href="item.link | linkFilter">
+                                                            <img style="width:128px; height:170px;" :src="item.imgUrl" />
+                                                        </a>
+                                                    </div>
+                                                    <div class="actor-info">
+                                                        <span :title="item.name">{{item.name}}</span>
+                                                        <span :title="item.role" class="role"> {{item.role}} </span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="celebrity-panel-item">
+                                            <blockquote class="layui-elem-quote"> 编剧</blockquote>
+                                            <div class="actors">
+
+                                                <div class="actor" v-for="item in allCelebrities.writerList">
+                                                    <div class="actor-img">
+                                                        <a :href="item.link | linkFilter">
+                                                            <img style="width:128px; height:170px;" :src="item.imgUrl" />
+                                                        </a>
+                                                    </div>
+                                                    <div class="actor-info">
+                                                        <span :title="item.name">{{item.name}}</span>
+                                                        <span :title="item.role" class="role"> {{item.role}} </span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="celebrity-panel-item">
+                                            <blockquote class="layui-elem-quote"> 制片人</blockquote>
+                                            <div class="actors">
+
+                                                <div class="actor" v-for="item in allCelebrities.producerList">
+                                                    <div class="actor-img">
+                                                        <a :href="(item.link | linkFilter)">
+                                                            <img style="width:128px; height:170px;" :src="item.imgUrl" />
+                                                        </a>
+                                                    </div>
+                                                    <div class="actor-info">
+                                                        <span :title="item.name">{{item.name}}</span>
+                                                        <span :title="item.role" class="role"> {{item.role}} </span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!--图集 panel -->
+                                <div class="layui-tab-item">
+
+                                    <div id="photos" class="photos">
+
+                                        <ul class="photo-list" id="photo-list"
+                                            style="list-style: none;overflow: hidden;">
+                                            <!--<li>-->
+                                            <!--<img src="https://p0.meituan.net/movie/1ad63347344bf1abd394ba7a2b8ce8b74725359.jpg@106w_106h_1e_1c"-->
+                                            <!--layer-src="https://p0.meituan.net/movie/1ad63347344bf1abd394ba7a2b8ce8b74725359.jpg" />-->
+                                            <!--</li>-->
+
+
+                                        </ul>
+
+                                        <div id="lazy"></div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                    <!--layui-col-md8 结束-->
+                </div>
+
+
+
+                <!--相关影片-->
+                <div class="layui-col-md4">
+
+                </div>
+
+
+                <!--layui-row 结束-->
+            </div>
+
+            <!--内容部分结束-->
+        </div>
+
+
+        <!--layui- container-->
+    </div>
+
+</div>
+
+
+
+<script th:inline="javascript">
+
+    var movieId  =[[${id}]];
+
+    console.log("movieId = "+movieId)
+
+    // var movieItemUrl = "http://localhost:8080/api/movie/subject/30163509";
+    var movieItemUrl = "http://localhost/api/movie/subject/" + movieId;
+    var celebritiesUrl = "http://localhost/api/movie/subject/"+ movieId +"/celebrities";
+
+
+
+    var movie = new Vue({
+        el: "#movie",
+        created() {
+            this.getMovieItem();
+
+        },
+        data: {
+            movie: '',
+            playingOk:false,
+            allCelebrities:[],       // 全部演职人员
+            subjectPrefix: '/movie/subject/',
+            celebrityPrefix:'/celebrity/'
+        },
+        methods: {
+            getAllCelebrities(){
+                this.$http.get(celebritiesUrl).then(function (res) {
+                    this.allCelebrities = res.body
+
+                    // 减少里面的数据
+                    console.log(movie);
+
+                }, function () {
+                    console.log("请求 headerUrl失败！")
+                })
+            },
+            getMovieItem() {
+                this.$http.get(movieItemUrl).then(function (res) {
+                    this.movie = res.body
+
+                    // 减少里面的数据
+                    this.movie.actorsList = this.reduceList(this.movie.actorsList)
+                    if(this.movie.playAddrList.length>0){
+                        this.playingOk = true;
+                    }
+                    console.log(movie);
+
+                }, function () {
+                    console.log("请求 headerUrl失败！")
+                });
+            },
+            reduceList: function (itemList) {
+                let actors =  itemList
+                let newVal = []
+                // debugger
+                if(actors.length>5){
+                    for(let i=0; i<5; i++){   // 如果多久只放五个
+                        newVal.push(actors[i])
+                    }
+                }
+                return newVal;
+            },
+            getAllCelebritiesData: function(){
+                this.getAllCelebrities();   // 获得所有演职人员
+            }
+        },
+        computed: {
+
+        },
+        filters: {
+            addPlayPrefix: function(val){
+                // 后端应该返回播放前缀
+                let prefix = "https://660e.com/?url=";
+                return prefix + val;
+            },
+            celebrityImgUrlFilter: function (val){
+                val = val.substring(val.indexOf("(")+1,val.lastIndexOf(")"));
+                return val;
+            },
+            linkFilter: function(val){
+                val = val.substring(val.indexOf("celebrity"));
+                val = '/' + val;
+                return val;
+            }
+        }
+    })
+
+    layui.use(['layer', 'form', 'element', 'rate', 'flow'], function () {
+        var layer = layui.layer
+            , element = layui.element
+            , rate = layui.rate
+            , $ = layui.jquery
+            , flow = layui.flow
+            , form = layui.form;
+
+
+        var movieId  =[[${id}]];
+        console.log(movieId)
+
+        // 监听两个“全部”按钮
+        // 监听跳到演职人员panel
+        $("#toCelebrityPanelBtn").click(function () {
+
+            element.tabChange('demo', '22');
+
+            console.log("toCelebrityPanelBtn");
+        });
+
+        // 监听跳到图集的 panel
+        $("#toPhotosPanel").click(function () {
+            element.tabChange('demo', '33');
+            // console.log("toPhotosPanel");
+        });
+
+
+        // 点击评论按钮
+        $("#comment").click(function () {
+
+            layer.open({
+                title: "评论",
+                type: 2,
+                content: ['http://localhost/page/page/comment.html', 'no'],
+                area: ['550px', '480px']
+
+            });
+
+        });
+
+        var photosUrl = "http://localhost/api/movie/subject/"+ movieId +"/photos";
+        // 渲染图片
+        $.ajax({
+            url: photosUrl,
+            data: {
+                "start": 1,
+                "count": 6
+            },
+            dataType:'json',
+            success: function (data) {
+
+                var photos = data.photos;       // 获取不了
+
+                $(".imgs .big-img img").attr("src", photos[0].image);
+
+                $(".imgs .small-img img").each(function (i) {
+
+                    $(this).attr("src", photos[i + 1].image);
+                });
+
+            }
+        });
+
+        var start = 1;
+        var count = 12;
+
+        // 相册定义为懒加载
+        flow.load({
+            elem: '#photo-list' //指定列表容器
+            , done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+
+                count = start + 12;
+
+
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get(photosUrl + "?start=" + start + "&count=" + count, function (data) {
+
+                    start = count;
+
+                    var res = data;
+                    // console.log(res);
+
+                    //假设你的列表返回在data集合中
+                    layui.each(res.photos, function (index, item) {
+
+                        // 定义小图片
+                        // var child = '<li><img src="'+item.icon+'" width="115px" height="115px"  /> </li>';
+                        var child = '<li><img src="' + item.icon + '" /> </li>';
+
+                        lis.push(child);
+                    });
+
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.total / 12 + 1);
+                },'json');
+
+                console.log(lis);
+
+                $("ul.photo-list").append(lis);
+
+            }
+        });
+
+
+
+        //相册渲染
+        layer.photos({
+            photos: '#photos'
+            , anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+        });
+
+        //监听写短评按钮
+        $('#writeComment').click(function () {
+
+            // 判断用户是否登入，如果登入写短评，否则先登入
+            layer.msg("写短评");
+
+        });
+
+
+        // 渲染评论列表的星星
+        // comment_list_item_score_1
+        var res = rate.render({
+            elem: '#movie-comment-score',
+            value: 5,
+            readonly: true
+        });
+
+
+
+
+        element.on('tab(demo)', function (data) {
+            console.log(data);
+            console.log(this);
+
+        });
+
+
+
+        // 评价完后回调函数，弹出窗口
+        var comment_score = rate.render({
+            elem: '#movie-comment-score',
+
+        });
+
+    });
+
+
+
+
+</script>
+
+
+</body>
+
+</html>

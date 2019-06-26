@@ -1,0 +1,74 @@
+
+
+#tips_box{
+    position: absolute;
+    top: 46px;
+    width: 190px;
+    /*height: 100px;*/
+    height: auto;
+    border: 1px solid grey;
+    z-index: 100;
+    background: white;
+    display: none;
+}
+
+#opt-list li{
+    width: 100%;
+    /*height: 28px;*/
+    /*border: 1px solid darkgray;*/
+    border-bottom: 1px solid darkgray;
+    line-height: 28px;
+    text-align: center;
+    color: black;
+
+}
+
+#opt-list li:hover{
+    background: #009688;
+    color: white;
+}
+
+
+
+.text-center{
+     text-align: center;
+ }
+
+.red-border{
+    border-color: #ffaf31;
+}
+
+.layui-active{
+    color: #ffaf31;
+}
+
+
+.my-footer{
+    height: 100px;
+
+}
+
+.layui-layout-left .layui-nav-item a {
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+}
+
+/*去掉 nav-item 里面的下划线*/
+.layui-nav .layui-this:after, .layui-nav-bar, .layui-nav-tree .layui-nav-itemed:after{
+    /*background-color: red;*/
+    display: none;
+}
+/*将导航栏固定在顶部*/
+.layui-nav-fixed{
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10000;
+    width: 100%;
+    height: 60px;
+}
+
+.top70{
+    margin-top: 70px;
+}

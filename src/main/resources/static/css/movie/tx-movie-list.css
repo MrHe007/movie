@@ -1,0 +1,165 @@
+
+ul{
+	list-style: none
+}
+
+.movie-tags{
+	margin-top:20px;
+	padding: 50px;
+	background-color: #f8f8f8;
+}
+
+
+ul.category{
+	display: block;
+}
+
+
+ul.category li{
+	display: inline-block;
+	margin-right: 4px;
+	padding: 5px 4px;
+	/*float: left;*/
+}
+/*表示选择 li 标签*/
+ul.category li.active{
+	background: #5FB878;
+	color: #ff5c38;
+}
+ul.category li.active>a{
+	color: black;
+	font-weight: 200;
+}
+
+ul.category li.active>a:hover{
+	color: #ff5c38;
+}
+
+ul.category li>a.tag{
+
+	text-decoration: none;
+
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+	/*margin: 10px ;*/
+	
+	/*悬浮显示手势*/
+	cursor: pointer;
+    font-size: 14px;
+    padding: 2px 10px;
+    line-height: 20px;
+    border-radius: 2px;
+}
+ul.category li>a:hover{
+	color: orange;
+	font-weight: 200;
+}
+
+ul.category li.category-name{
+	/*background: #01AAED;*/
+}
+
+
+
+
+/*搜索框*/
+
+.search{
+	height: 80px;
+}
+
+.nav-logo{
+	position: absolute;
+	top: 25px;
+	display: inline-block;
+	padding: 10px;
+	margin-right: 100px;
+	margin-top: -20px;
+}
+
+.search-form{
+	position: absolute;
+	left: 150px;
+}
+
+/*电影列表*/
+.movie-list-container{
+	margin-top: 30px;
+}
+
+/* .movie-item{
+	margin-right: 25px;
+	padding-right: 15px;
+	padding-top: 15px;
+} */
+
+.movie-list-container .movie-item{
+	display: inline-block;
+	border: 1px solid floralwhite;
+	position: relative;
+	width: 200x;
+	height: 260px;
+
+	margin-bottom: 120px;
+	
+}
+
+.movie-list-container .movie-item a{
+	list-style: none;
+	text-decoration :none;
+	display: inline-block;
+	width: 200px;
+	text-overflow: ellipsis;
+	white-space: nowrap;	
+	overflow: hidden;
+	text-align: left;
+	padding-bottom: 3px;
+	
+
+}
+
+.movie-list-container .movie-item .movie-name span{
+	text-align: left;
+	color: grey;
+	font-size: 8px;
+	display: block;
+	width: 150px;
+	text-overflow: ellipsis;
+	white-space: nowrap;	
+	overflow: hidden;
+	padding-bottom: 3px;
+}
+
+.movie-list-container .movie-item a:hover{
+    color: #ffb821;
+}
+
+/* 设置图片大小 */
+.movie-item .movie-img img{
+	width: 183px;
+	height: 257px;
+}
+
+.movie-list-container .movie-item .movie-score{
+	display: inline-block;
+	position: absolute;
+	top: 5px;
+	left: 8px;
+	padding: 5px;
+	color: white;
+	font-size: 16px;
+	background: #F57C00;
+}
+
+.movie-name span{
+	display: block;
+	text-align: center;
+}
+
+.movie-name{
+	padding: 10px;
+}
+
+
+

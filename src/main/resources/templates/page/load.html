@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+
+    <title>开始使用layui</title>
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/css/login.css}" />
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/css/common.css}" />
+
+</head>
+<body>
+
+</body>
+
+<script>
+layui.use(['layer', 'form','element'], function() {
+    var layer = layui.layer, element = layui.elememt
+        , form = layui.form, $ = layui.jquery;
+
+    var index = layer.load(2, {time: 10*1000}); //又换了种风格，并且设定最长等待10秒
+    //关闭
+    layer.close(index);
+
+});
+</script>
+
+</html>

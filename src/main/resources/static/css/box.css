@@ -1,0 +1,14 @@
+
+.box{
+	margin: 0 auto;
+	margin-top:75px;
+	width: 80%;
+	border: 1px solid grey;
+	padding: 25px;
+}
+
+.box-info{
+	/*overflow: hidden;*/
+	float: right;
+	border: 1px solid green;
+}

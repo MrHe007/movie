@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<title>搜索下拉</title>
+	<link rel="stylesheet" type="text/css" href="css/my.css" th:href="@{/css/my.css}" />
+	<script src="https://cdn.bootcss.com/jquery/1.11.1/jquery.js" th:src="@{https://cdn.bootcss.com/jquery/1.11.1/jquery.js}"></script>
+
+	<script>
+		function ajax_tool_pro(option) {//封装的ajax方法
+			var ajax = new XMLHttpRequest();
+			if (option.method == 'get') {
+				if (option.data) {
+					option.url += '?';
+					option.url += option.data;
+				} else {
+				}
+				ajax.open(option.method, option.url);
+				// send即可
+				ajax.send();
+			} else {
+				ajax.open(option.method, option.url);
+				ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				if (option.data) {
+					ajax.send(option.data);
+				} else {
+					ajax.send();
+				}
+			}
+			// 注册事件
+			ajax.onreadystatechange = function () {
+				if (ajax.readyState == 4 && ajax.status == 200) {
+					option.success(ajax.responseText);
+				}
+			}
+		}
+	</script>
+	<script>
+		window.onload = function () {
+			var search_box = document.querySelector("#ser_box");
+			var search_ipt = document.querySelector("#ipt");
+			var info_box = document.querySelector("#bot_box");
+			var info = document.querySelector("#oul");
+			var response = [];
+			var lis = document.getElementsByTagName("li");
+			let i = 0;
+			document.onkeydown = function (ev) {//键盘控制
+				/*按键*/
+				if (info_box.style.display == "block") {
+					if (ev.keyCode == 40) {
+						for (var j = 0; j < lis.length; j++) {
+							if (lis[j].className == "sel") {
+								lis[j].className = "";
+							}
+						}
+						if (i < lis.length) {
+							lis[i++].className = "sel";
+							if (i == lis.length) {
+								i = 0;
+							}
+						}
+					}
+					if (ev.keyCode == 38) {
+						m = 0
+						for (; m < lis.length; m++) {
+							if (lis[m].className == "sel") {
+								lis[m].className = "";
+								break;
+							}
+						}
+						i = m;
+						if (m > 0) {
+							lis[m - 1].className = "sel";
+						} else {
+							lis[lis.length - 1].className = "sel";
+						}
+					}
+					if (ev.keyCode == 13) {
+						for (var n = 0; n < lis.length; n++) {
+							if (lis[n].className == "sel") {
+								ipt.value = lis[n].innerHTML;
+							}
+						}
+						info_box.style.display = "none";
+					}
+				} else {
+					i = 0;
+					m = 0;
+				}
+			}
+
+			search_ipt.oninput = function () {
+				let val = this.value; //传送到后端的关键字
+
+
+				var url1 = 'localhost/movie/search.json?q='+val;
+
+				// 设置count 表示请求的数量
+				var url = 'http://localhost/movie/search.json?start=0&count=5';
+				var url2 = 'http://localhost/movie/search.json?q=%E6%88%98%E7%8B%BC';
+
+
+				$("#bot_box ul").on("click","li a",function (data) {
+
+				    console.log("电影ID: "+$(this).attr("data-id"));
+
+				    var movieId = $(this).attr("data-id");
+
+				    // 跳转到指定的电影
+					var toUrl = "http://localhost/movie/subject/"+movieId;
+
+					location.href = toUrl;
+
+                });
+
+
+				$.ajax({
+
+					url:url,
+					data:{q:val},
+					success:function (data) {
+
+                        response = data.subjects;
+						console.log(response);
+						// console.log(response);
+						var arr = response;
+						info.innerHTML = "";
+						if (!arr) {
+							info_box.style.display = "none";
+						} else {
+							info_box.style.display = "block";
+							for (var i = 0; i < arr.length; i++) {
+								li = document.createElement("li");
+
+								// li.innerHTML = arr[i];
+								var elem = arr[i];
+								li.innerHTML = '<a style="text-decoration-line: none;" data-id="'+elem.id+'">'+elem.title+'</a>';
+								// li.onclick = function () {
+								// 	info.innerHTML = "";
+								// 	search_ipt.value = this.innerHTML;
+                                //
+								// 	// 获取匹配电影的 id  	--   通过
+								// 	var id = this.innerHTML;
+                                //
+								// 	info_box.style.display = "none";
+								// }
+								info.appendChild(li);
+							}
+						}
+
+                    }
+
+				});
+
+				// ajax_tool_pro({
+				// 	method: "get",
+				// 	url: url1, //后端接口地址
+				// 	// data: "key=" + val, //参数为 ?key=val
+				// 	success: function (resp) { //resp为后端根据关键字key模糊搜索的结果，返回结果应为数组
+				// 		response = JSON.parse(resp).subjects;
+				// 		console.log(response);
+				// 		// console.log(response);
+				// 		var arr = response;
+				// 		info.innerHTML = "";
+				// 		if (!arr) {
+				// 			info_box.style.display = "none";
+				// 		} else {
+				// 			info_box.style.display = "block";
+				// 			for (var i = 0; i < arr.length; i++) {
+				// 				li = document.createElement("li");
+				// 				li.innerHTML = arr[i];
+				// 				li.onclick = function () {
+				// 					info.innerHTML = "";
+				// 					search_ipt.value = this.innerHTML;
+				// 					info_box.style.display = "none";
+				// 				}
+				// 				info.appendChild(li);
+				// 			}
+				// 		}
+				// 	}
+				// });
+			}
+		}
+	</script>
+</head>
+
+<body>
+	<div id="out">
+		<div id="ser_box">
+			<input type="search" id="ipt" />
+			<span>
+				<input id="su" placeholder="搜索一下" class="bg s_btn" type="submit">
+			</span>
+		</div>
+
+		<div id="bot_box">
+			<ul id="oul"></ul>
+		</div>
+	</div>
+</body>
+
+</html>

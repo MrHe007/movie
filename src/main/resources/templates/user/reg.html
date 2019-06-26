@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+
+    <title>reg.html</title>
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/css/reg.css}" />
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/css/common.css}" />
+
+</head>
+<body>
+<div class="layui-layout layui-layout-admin" style="position: relative;">
+
+    <div th:replace="common/common :: nav-header" ></div>
+
+ 	<div class="layui-container">
+ 		
+ 		<div class="form-container" >
+
+            <!--注册成功，跳转到首页( 电影展示页面) -->
+ 			<form class="layui-form" action="" th:action="@{/user/reg}" method="post">
+ 				<!--<input type="hidden" name="_method" value="">-->
+ 				<div class="layui-form-item">
+ 				 <div class="layui-form-mid">
+				  	<h2>注册账号</h2>
+				  </div>
+				  <div class="layui-form-mid layui-word-aux" style="float: right;margin-right: 100px;">
+				  	<a href="#" th:href="@{/}">返回主页</a>
+				  </div>
+ 				</div>
+ 				
+ 				<div class="layui-form-item">
+ 					<div class="layui-input-inline">
+ 						<i class="layui-icon layui-icon-username form-icon"></i>
+ 						<input type="text" name="username" required lay-verify="required" placeholder="请输入用户名或邮箱" autocomplete="off" class="layui-input"/>
+ 					</div>
+ 				</div>
+ 				<div class="layui-form-item">
+ 					
+ 					<div class="layui-input-inline">
+ 						<i class="layui-icon layui-icon-password form-icon"></i>
+ 						<input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input"/>
+ 					</div>
+ 				</div>
+ 				<div class="layui-form-item">
+ 					
+ 					<div class="layui-input-inline">
+ 						<i class="layui-icon layui-icon-password form-icon"></i>
+ 						<input type="password" name="repassword" required lay-verify="required" placeholder="请确认密码" autocomplete="off" class="layui-input"/>
+ 					</div>
+ 				</div>
+ 				
+ 				<div class="layui-form-item" >
+ 					 <div class="layui-form-mid">
+				  	<a href="#" th:href="@{/user/login}">登入账号</a>
+				  </div>
+				  <div class="layui-form-mid layui-word-aux" style="float: right;margin-right: 100px;">
+				  	<a href="#" style="color: red;" th:href="@{/user/forget}">忘记密码?</a>
+				  </div>
+ 				</div>
+ 				
+ 				<div class="layui-form-item">
+			    <div style="width: 360px;">
+			      <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="formDemo">注册</button>
+			    </div>
+		    </div>
+ 			</form>
+ 			
+ 		</div>
+ 		
+ 	</div>
+</div>
+<script>
+//一般直接写在一个js文件中
+layui.use(['layer', 'form','element'], function(){
+  var layer = layui.layer, element = layui.elememt, form = layui.form, $ = layui.jquery;
+ 
+ 	form.on('submit(formDemo)',function(data){
+
+ 	    // 获取两个 password 是否相等，相等后检查是否是邮箱（假设有个 @ 符号的 username 是邮箱地址
+
+        // 将 js 对象转换为json 字符串
+        fields = JSON.stringify(data.field);
+        jobj = data.field
+
+        console.log(jobj);
+
+        // console.log(jobj.password);
+        // console.log(jobj.repassword);
+
+        // 返回的标志
+        var flag = true;
+
+        // 密码与确认密码
+        if(jobj.password != jobj.repassword){
+            console.log("两次密码不一致");
+            // 密码不一致，修改标志
+            flag = false;
+            // 给密码框添加警示样式
+
+            $("input[type='password']").addClass("red-border");
+            layer.msg('两次密码不一致', {
+                icon: 2,
+                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+            }, function(){
+                // console.log("回调函数");
+                $("input[type='password']").removeClass("red-border");
+            });
+        }
+
+        // var str = "username="+jobj.password+"&password="+jobj.password;
+
+
+
+        // console.log(data);
+
+        // console.log("flag : "+flag);
+
+
+        // 开始 ajax 访问后台
+
+        var url = "/user/reg";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: jobj,
+            success: function(msg){
+                // console.log("Ajax success!");
+                // console.log(msg);
+                var code = msg.code;
+                // 400 表示用户已存在
+                if(code==200){
+                    console.log("注册成功! -》 topage.html");
+                    location.href = "/page/page/topage.html";
+                }else if(code==400){
+                    layer.msg(msg.msg);
+                }else{
+                    console.log("其他错误!");
+
+                }
+            },
+            error:function (msg) {
+                console.log(msg);
+            }
+        });
+
+
+
+
+
+
+
+
+        return false;
+ 	});
+ 
+  
+//layer.msg('Hello World');
+});
+</script> 
+</body>
+</html>

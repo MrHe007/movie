@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+  <meta charset="utf-8">
+  <title>layDate快速使用</title>
+    <link rel="stylesheet"  th:href="@{/css/user/user-info.css}">
+</head>
+<body >
+<div class="layui-layout layui-layout-admin" style="position: relative;">
+
+    <!--引入个公共的头部导航栏-->
+    <div th:replace="common/common :: nav-header"></div>
+
+    <div class="main">
+            <div class="box">
+                <div class="layui-card">
+                  <div class="layui-card-header" style="background-color: #E6EBF2;">用户信息</div>
+                  <div class="layui-card-body">
+                    <div class="editForm">
+                        <form class="layui-form" action="" th:action="@{/user/edit}" th:method="post">
+                            <input type="hidden" name="id" th:value="${session.user.uid}" >
+
+                          <div class="layui-form-item">
+                            <div class="layui-form-mid">
+                                <label class="layui-form-label layui-form-mid">头像</label>
+
+                            </div>
+                            <div class="layui-form-mid" style="cursor: pointer;">
+                                <img id="img"  src="http://t.cn/RCzsdCq" class="layui-nav-img" th:src="@{${session.user.imgUrl}}" style="width: 100px;height: 100px;">
+                            </div>
+
+                          </div>
+                          <div class="layui-form-item">
+                             <div class="layui-block">
+                                <label class="layui-form-label">用户名</label>
+                                <div class="layui-input-inline">
+                                  <input type="text" name="password" required lay-verify="required" th:value="${session.user.username}"  autocomplete="off" class="layui-input" disabled>
+                                </div>
+                            </div>
+
+                            <!--<div class="layui-inline">-->
+                                <!--<label class="layui-form-label">性别</label>-->
+                                <!--<div class="layui-input-inline">-->
+                                  <!--<input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                          </div>
+
+
+                          <div class="layui-form-item">
+                            <div class="layui-inline">
+                              <label class="layui-form-label">联系方式</label>
+                              <div class="layui-input-inline">
+                                <input type="tel" name="phone" placeholder="请输入联系方式" th:value="${session.user.phone}" lay-verify="required|phone" autocomplete="off" class="layui-input">
+                              </div>
+                            </div>
+                            <div class="layui-inline">
+                              <label class="layui-form-label">邮箱</label>
+                              <div class="layui-input-inline">
+                                <input type="text" name="email" placeholder="请输入邮箱" th:value="${session.user.email }" lay-verify="email" autocomplete="off" class="layui-input">
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="layui-form-item">
+                            <label class="layui-form-label">出生年月</label>
+                            <div class="layui-input-block" style="width: 400px;">
+                              <input type="text" name="birthday" placeholder="请输入" th:value="${session.user.birthday}" autocomplete="off" id="birth" class="layui-input">
+                            </div>
+                          </div>
+                          <div class="layui-form-item" style="margin-top: 30px;">
+                            <div class="layui-input-block" >
+                                <button class="layui-btn" style="width: 200px;" lay-submit id="submit">保存</button>
+                            </div>
+                          </div>
+                        </form>
+                  </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+
+</div>
+ 
+<script>
+layui.use(['laydate','form','upload'], function(){
+  var laydate = layui.laydate;
+  var form = layui.form;
+  var upload = layui.upload;
+  
+  var uploadInst = upload.render({
+    elem: '#img' //绑定元素
+      ,field:'imgFile'          // 设置文件的域字段名
+    ,url: '/user/upload' //上传接口
+    ,done: function(res){
+      //上传完毕回调
+
+          console.log(res);
+          // 回调完成，刷新网页，使图片显示
+          location.href = '/page/user/user-info.html';
+          // $("#img").attr("src", "http://pic.9ht.com/up/2014-8/201482691356.jpg");
+      
+    }
+    ,error: function(res){
+      //请求异常回调
+          console.log(res);
+    }
+  });
+  
+  
+  //执行一个laydate实例
+  laydate.render({
+    elem: '#birth' //指定元素
+  });
+  
+  
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+		<title>实时票房</title>
+		<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+		<link rel="stylesheet" th:href="@{/css/frame/bootstrap.min.css}">
+		<link rel="stylesheet" href="css/box.css" th:href="@{/css/box.css}" />
+</head>
+	<body>
+
+	<div class="layui-layout layui-layout-admin" style="position: relative;">
+
+
+		<!--引入个公共的头部导航栏-->
+		<div th:replace="common/common :: nav-header"></div>
+
+
+		<div class="box">
+	    <table class="table table-hover">
+	      <thead>
+	        <tr>
+	          <th>序号</th>
+	          <th>电影名</th>
+	          <th>总票房</th>
+	          <th>票房占比</th>
+	          <th>综合票房</th>
+	          <th>排片场次</th>
+	          <th>排片占比</th>
+	          <th>场均人次</th>
+	          <th>上座率</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	      </tbody>
+	    </table>
+   </div>
+
+	<div class="box-info">
+		<span class="time" id="time">fd</span>
+		<span class="totalBoxOffer" id="totalBoxOffer">fda</span>
+	</div>
+
+	</div>
+
+	  <script src="https://cdn.bootcss.com/jquery/1.10.0/jquery.js"></script>
+
+        <script>
+
+            layui.use('element', function(){
+                var element = layui.element;
+
+            });
+
+        </script>
+
+	  <script>
+	  	
+	  	var url = "http://localhost/movie/boxoffer2.json";
+	  	$.getJSON(url,function(data){
+			console.log(data);
+
+			var time = data.data.updateInfo; 	// 时间
+			var totalBoxInfo = data.data.totalBoxInfo; 	// 总票房数据
+			var totalBoxUnit = data.data.totalBoxUnit; 	// 总票房单位
+			
+			var total = totalBoxInfo+" "+totalBoxUnit;
+			
+			console.log(time);
+			console.log(total);
+			
+			$("#time").val(time);
+			$("#totalBoxOffer").val(total);
+			
+			// 遍历数据
+			$.each(data.data.list,function(i,item){
+//				console.log(i,item);
+				var index = i+1; 	// 电影列表排名
+				var movieName = item.movieName;
+				var sumBoxInfo = item.sumBoxInfo; 		// 总票房
+				var boxInfo = item.boxInfo; 	// 综合票房
+				var boxRate = item.boxRate; 	// 票房占比
+				var showInfo = item.showInfo; 	//排片场次
+				var showRate = item.showRate; 	// 排片占比
+				var avgShowView = item.avgShowView; 	// 人均场次
+				var avgSeatView = item.avgSeatView; 	// 上座率
+				
+				
+				var row1 = '<th scope="row">'+index+'</th>';
+				var row2 = '<td>'+movieName+'</td>';
+				var row3 = '<td>'+sumBoxInfo+'</td>';;
+				var row4 = '<td>'+boxInfo+'</td>';
+				var row5 = '<td>'+boxRate+'</td>';
+				var row6 = '<td>'+showInfo+'</td>';
+				var row7 = '<td>'+showRate+'</td>';
+				var row8 = '<td>'+avgShowView+'</td>';
+				var row9 = '<td>'+avgSeatView+'</td>';
+				
+				var str = '<tr>'+row1+row2+row3+row4+row5+row6+row7+row8+row9+'</tr>'
+				
+				
+				$(".table tbody ").append(str);
+				
+			});
+
+	  	});
+	  	
+	  </script>
+	
+	</body>
+</html>

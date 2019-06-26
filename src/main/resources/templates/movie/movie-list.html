@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+
+    <title>list</title>
+
+    <link rel="stylesheet" href="../css/movie-list.css" th:href="@{/css/movie-list.css}">
+    <link rel="stylesheet" href="../css/movie-list.css" th:href="@{/css/lib/bootstrap.min.css}">
+
+</head>
+<body class="layui-layout layui-layout-admin" style="position: relative;">
+ 
+	<!--导航栏-->
+
+        <!--引入个公共的头部导航栏-->
+
+    <div th:replace="common/common :: nav-header"></div>
+
+	<div class="layui-container top70">
+
+
+
+
+		<!--头部的电影标签-->
+		<div class="">
+
+
+            <div class="movie-tags">
+                <!--电影类型-->
+                <div class="category-div">
+                    <ul class="category types">
+                        <li class="category-name tag">
+                            <button class="layui-btn layui-btn-normal">全部形式</button>
+                        </li>
+
+
+                    </ul>
+
+                </div>
+
+
+			<!--电影类型-->
+			<div class="category-div">
+				<ul class="category genres">
+					<li class="category-name tag">
+						<button class="layui-btn layui-btn-normal">全部类型</button>
+					</li>
+
+					
+				</ul>
+			
+			</div>
+			
+				
+			<div ><!--地区-->
+				<ul class="category countries">
+					<li class="category-name">
+						<button class="layui-btn  layui-btn-normal">全部地区</button>
+					</li>
+
+				</ul>
+			</div >
+				
+			<!--年代-->
+			<div class="category-div">
+				<ul class="category years">
+					<li class="category-name">
+						<button class="layui-btn  layui-btn-normal">全部年代</button>
+					</li>
+
+					
+				</ul>
+			</div>
+
+                <!--年代-->
+            <div class="category-div">
+                <ul class="category features">
+                    <li class="category-name">
+                        <button class="layui-btn  layui-btn-normal">全部特色</button>
+                    </li>
+
+
+                </ul>
+            </div>
+
+		</div>
+		
+		
+		<!--显示电影方式-->
+		<div class="movie-utils" style="margin-top: 30px;">
+			
+			<div class="layui-btn-group">
+			  <a href="#" class="layui-btn">近期热门</a>
+			  <a class="layui-btn  layui-btn-primary">即将上映</a>
+			  <a class="layui-btn  layui-btn-primary">评分最高</a>
+			</div>
+		</div>
+		 
+		<!--中间的分割线-->
+		<hr class="layui-bg-blue" style="margin-top: 20px;margin-bottom: 20px;">
+		
+		
+		<!--中间的搜索框-->
+		<div class="search">
+			<div class="search-content" style="position: relative;">
+				
+				<div class="nav-logo">
+					<h2 style="font-weight: 700;">盒子电影</h2>
+				</div>
+				<div class="search-form" style="display: inline-block;">
+					
+					<form class="layui-form" action="">
+						<div class="layui-form-item">
+					    <!--<label class="layui-form-label">输入框</label>-->
+					    <div class="layui-form-mid layui-input-inline" id="app" style="width: 360px;">
+					      <input type="text" maxlength="60" size="22" v-model="keyword" name="keyword" required  lay-verify="required" placeholder="搜索影片、影人" autocomplete="off" class="layui-input">
+                            <div id="data-list" v-if="show" style="position:absolute; z-index: 100;">
+                                <ul class="list-group">
+                                    <li class="list-group-item" v-for="item in respList" >
+                                        <a :href="item.url">
+                                            {{item.title}}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+					    <div class="layui-form-mid">
+					    	<button class="layui-btn layui-btn-danger" lay-submit lay-filter="submitBtn">
+					    		<span class="layui-icon layui-icon-search" style="font-size: 19px;"></span> 
+					    	</button>
+					    </div>
+					  </div>
+					</form>
+					
+				</div>
+				
+			</div>
+		</div>
+		
+		<!--中间的分割线-->
+		<hr class="layui-bg-blue" style="margin-top: 20px;margin-bottom: 20px;">
+		
+		<!--电影列表-->
+		<div class="movie-list-container">
+			
+			<div class="layui-row">
+				
+				<div class="layui-col-md9">
+					
+					<dl class="movie-list">
+                        <span class="hidden" style="visibility: hidden;">1</span>
+				<!--<dd class="movie-item">-->
+					<!--<div class="movie-item-content">-->
+						<!--<div class="movie-img" style="text-align: center;">-->
+							<!--<a href="#" title="海王">-->
+								<!--<img src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2544987866.webp" alt="海王"/>-->
+							<!--</a>-->
+						<!--</div>-->
+						<!--&lt;!&ndash;电影评分&ndash;&gt;-->
+						<!--<div class="movie-score">-->
+							<!--<span >9.3</span>-->
+						<!--</div>-->
+						<!--<div class="movie-name">-->
+							<!--<h3 style="text-align: center;">-->
+								<!--<a href="#" style="font-weight: 700;">海王</a>-->
+							<!--</h3>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</dd>						-->
+
+			</dl>
+			
+					
+				</div>
+				
+				<div class="layui-col-md3">
+					
+				</div>
+				
+			</div>
+			
+
+		</div>
+		
+		
+		<div class="page-container" style="">
+			<div id="page" style="text-align: center; padding: 8px;">
+				
+			</div>
+		</div>
+		
+	</div>
+    </div>
+
+    <script>
+
+        var url = 'http://localhost/api/movie/search';
+        var vm = new Vue({
+            el:'#app',
+            data:{
+                keyword:'',
+                respList:[],
+                show: false
+            },
+            methods:{
+                fun(){
+                    console.log("d");
+                },
+                getDataByKeyWord(keyword){
+                    this.$http.get(url,{
+                        params:{
+                            q: keyword
+                        }
+                    }).then(function(res){
+                        this.respList = res.body
+                    },function(){
+                        console.log("ajax error!")
+                    })
+                }
+            },
+            watch: {
+                keyword: function(val){     // 监听属性的变化
+                    console.log(val);
+                    this.getDataByKeyWord(val);
+                    this.show = true;
+                }
+            },
+        });
+
+    </script>
+
+    <script  th:src="@{/js/movie-list-method.js}"></script>
+    <script th:src="@{/js/movie-list.js}" ></script>
+</body>
+</html>

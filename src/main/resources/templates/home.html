@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+
+    <title>盒子电影</title>
+    <link rel="stylesheet" href="../css/home2.css" th:href="@{/css/home2.css}">
+
+
+</head>
+<body >
+	<div class="layui-layout layui-layout-admin" style="position: relative;">
+
+
+        <!--引入个公共的头部导航栏-->
+        <div th:replace="common/common :: nav-header"></div>
+
+        <div class="imgs" style="margin-top: 70px;">
+
+                <div class="layui-carousel" id="test1">
+                  <div carousel-item >
+                    <div>
+                        <img src="../img/nav-1.jpg" th:src="@{/img/nav-1.jpg}" width="100%" height="100%"/>
+                    </div>
+                    <div>
+                        <img src="../img/nav-2.jpg" th:src="@{/img/nav-2.jpg}" width="100%" height="100%"/>
+                    </div>
+                    <div>
+                        <img src="../img/nav-3.jpg" th:src="@{/img/nav-3.jpg}" width="100%" height="100%"/>
+                    </div>
+                    <div>
+                        <img src="../img/nav-4.jpg" th:src="@{/img/nav-4.jpg}" width="100%" height="100%"/>
+                    </div>
+                  </div>
+                </div>
+
+            </div>
+
+        <!--电影类表-->
+        <div class="layui-container" >
+            <div class="layui-row">
+                <div class="layui-col-md9" id="app">
+
+                    <h3>{{cityName}}</h3>
+
+                    <div class="main" >
+                    <div class="movie-grid">
+
+                         <div class="panel">
+                            <div class="panel-header textcolor_red">
+                          <span class="panel-more">
+                            <!--<a href="/films?showType=1" class="textcolor_red" data-act="all-playingMovie-click">-->
+                              <!--<span>全部></span>-->
+                            <!--</a>-->
+                          </span>
+                          <span class="panel-title">
+                            <span class="textcolor_red">正在热映（
+                                <span id="movieCount">{{movieList.length}}</span>
+                                部）</span>
+                          </span>
+                        </div>
+                            <div class="panel-content">
+                                <dl class="movie-list">
+                                    <dd v-for="(item, index) in movieList" :key="index">
+                                        <div class="movie-item">
+                                            <a :href="'movie/subject/' + item.movieId" target="_blank">
+                                                <div class="movie-poster">
+                                                    <img :src="item.imgUrl">
+                                                    <div class="movie-overlay movie-overlay-bg">
+                                                        <div class="movie-info">
+                                                            <div class="movie-score">{{item.score}}</div>
+                                                            <div class="movie-title movie-title-padding"
+                                                                 :title="item.movieName">{{item.movieName}}
+                                                            </div>
+                                                            <a class="layui-btn layui-btn-fluid"
+                                                               :href="item.maoYanUrl" v-if="item.maoYanUrl!=''"
+                                                            >购票
+                                                            </a>
+                                                            <a class="layui-btn layui-btn-fluid"
+                                                               v-if="item.maoYanUrl==''">暂无购票
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                            <div class="movie-ver"><i class="imax3d"></i></div>
+                                        </div>
+
+                                    </dd>
+
+                                </dl>
+
+                            </div>
+
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header textcolor_red">
+                          <span class="panel-more">
+                            <!--<a href="/films?showType=1" class="textcolor_red" data-act="all-playingMovie-click">-->
+                              <!--<span>全部></span>-->
+                              <!--</a>-->
+                          </span>
+                                <span class="panel-title">
+                            <span class="textcolor_red">准备上映（
+                                <span>{{upComingList.length}}</span>
+                                部）</span>
+                          </span>
+                            </div>
+                            <div class="panel-content">
+                                <dl class="movie-list">
+                                    <dd v-for="(item, index) in upComingList" :key="index">
+                                        <div class="movie-item">
+                                            <a :href="'movie/subject/' + item.movieId" target="_blank">
+                                                <div class="movie-poster">
+                                                    <img :src="item.imgUrl">
+                                                    <div class="movie-overlay movie-overlay-bg">
+                                                        <div class="movie-info">
+
+                                                            <div class="movie-title movie-title-padding"
+                                                                 :title="item.movieName">{{item.movieName}}
+                                                            </div>
+                                                            <div class="release"
+                                                                 :title="item.movieName">{{item.date}}
+                                                            </div>
+                                                            <a class="layui-btn layui-btn-fluid"
+                                                                :href="item.maoYanUrl" v-if="item.maoYanUrl!=''"
+                                                                 >购票
+                                                            </a>
+                                                            <a class="layui-btn layui-btn-fluid"
+                                                               v-if="item.maoYanUrl==''">暂无购票
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                            <div class="movie-ver"><i class="imax3d"></i></div>
+                                        </div>
+
+                                    </dd>
+
+                                </dl>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <!--引用公共的footer-->
+        <div th:replace="~{common/common :: my-footer}"></div>
+
+
+
+    </div>
+  
+ 
+<script src="https://cdn.bootcss.com/holder/2.9.6/holder.min.js"></script>
+<script>
+//一般直接写在一个js文件中
+layui.use(['layer', 'form','element','carousel'], function(){
+  var layer = layui.layer
+  ,form = layui.form,carousel = layui.carousel,$ = layui.jquery;
+
+
+    var url  = "http://localhost/api/movie/index.json";
+
+    var vm = new Vue({
+        el: '#app',
+        created() {
+            this.getData();
+        },
+        data:{
+            movieList:[],
+            upComingList:[],
+            cityName:''
+        },
+        methods: {
+            getData(){
+                this.$http.get(url).then(function(res){
+                    this.movieList = res.body.nowPlayingMovieDtos;
+                    this.upComingList = res.body.futurePlayingMovieDtos;
+                    this.cityName = res.body.cityName;
+                });
+            }
+        },
+
+    });
+
+  var url = "http://localhost/movie/in_theaters.json";
+  // 获取正在热映的json
+
+});
+</script> 
+</body>
+</html>

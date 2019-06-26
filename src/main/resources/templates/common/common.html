@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--定义为公共的片段-->
+
+<head th:fragment="common_header(title,links)">
+    <meta charset="UTF-8">
+    <title th:replace="${title}">common</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="referrer" content="never">
+
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/webjars/layui/2.4.5/css/layui.css}" />
+    <script src="../layui/layui.js" th:src="@{/webjars/layui/2.4.5/layui.js}"></script>
+    <link rel="stylesheet" href="../css/common.css" th:href="@{/css/common.css}">
+    <script src="https://cdn.bootcss.com/holder/2.9.6/holder.min.js" th:src="@{https://cdn.bootcss.com/holder/2.9.6/holder.min.js}"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.11.1/jquery.js" th:src="@{https://cdn.bootcss.com/jquery/1.11.1/jquery.js}"></script>
+    <script th:src="@{/js/lib/vue.js}"></script>
+    <script  th:src="@{/js/common.js}"></script>
+    <script th:src="@{/js/lib/vue-resource.min.js}"></script>
+
+    <!--额外的连接-->
+
+    <th:block th:replace="${links}"  />
+</head>
+
+<head th:fragment="admin_header(title,links)">
+    <meta charset="UTF-8">
+    <title th:replace="${title}">common</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="referrer" content="never">
+
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/webjars/layui/2.4.5/css/layui.css}" />
+    <script src="../layui/layui.js" th:src="@{/webjars/layui/2.4.5/layui.js}"></script>
+    <link rel="stylesheet" href="../css/common.css" th:href="@{/css/common.css}">
+    <script src="https://cdn.bootcss.com/holder/2.9.6/holder.min.js" th:src="@{https://cdn.bootcss.com/holder/2.9.6/holder.min.js}"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.11.1/jquery.js" th:src="@{https://cdn.bootcss.com/jquery/1.11.1/jquery.js}"></script>
+    <script th:src="@{/js/lib/vue.js}"></script>
+    <script th:src="@{/js/lib/vue-resource.min.js}"></script>
+    <!--额外的连接-->
+
+    <th:block th:replace="${links}"  />
+</head>
+
+<body>
+
+<!--头部导航栏-->
+
+<div th:fragment="nav-header" class="layui-header layui-nav-fixed">
+    <div class="layui-logo">盒子电影</div>
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+    <ul class="layui-nav layui-layout-left">
+        <li class="layui-nav-item"><a href="/" class="layui-bg-green">主页</a></li>
+        <li class="layui-nav-item"><a href="" th:href="@{/page/movie/movie-list.html}">电影</a></li>
+        <li class="layui-nav-item"><a href="" th:href="@{/page/movie/tx-movie-list.html}">腾讯影院</a></li>
+        <li class="layui-nav-item"><a href="" th:href="@{/page/board/board.html}">榜单</a></li>
+        <li class="layui-nav-item">
+            <a href="" th:href="@{/news/news-list.html}">新闻</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="" th:href="@{/page/box/box.html}">实时票房</a>
+        </li>
+    </ul>
+    <ul class="layui-nav layui-layout-right">
+
+        <li class="layui-nav-item">
+            <a href="" th:href="@{/admin/admin}">后台系统</a>
+        </li>
+
+        <!-- 如果用户不存在，没有登入，显示下方代码 -->
+        <th:block  th:if="not ${session.user}">
+            <li class="layui-nav-item">
+                <a href=":;" th:href="@{/user/reg}">
+                    注册
+                </a>
+
+
+            <li class="layui-nav-item">
+                <a href="javascript:;" th:href="@{/user/login}">
+                    登入
+                </a>
+            </li>
+        </th:block>
+
+        <th:block th:if="${session.user}">
+            <!--如果有下面片段，显示用户信息-->
+            <li class="layui-nav-item" >
+                <a href="javascript:;">
+                    <img src="http://t.cn/RCzsdCq" th:src="${session.user.imgUrl}" class="layui-nav-img">
+                    [[${session.user.username}]]
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="" th:href="@{/page/user/user-info.html}">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a id="logout" style="cursor: pointer;" >退了</a></li>
+        </th:block>
+
+
+    </ul>
+</div>
+
+
+
+<head th:fragment="common_header_layui(title,links)">
+    <meta charset="UTF-8">
+    <title th:replace="${title}">common</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="referrer" content="never">
+
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/webjars/layui/2.4.5/css/layui.css}" />
+    <script src="../layui/layui.js" th:src="@{/webjars/layui/2.4.5/layui.js}"></script>
+    <link rel="stylesheet" href="../css/common.css" th:href="@{/css/common.css}">
+    <script src="https://cdn.bootcss.com/holder/2.9.6/holder.min.js" th:src="@{https://cdn.bootcss.com/holder/2.9.6/holder.min.js}"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.11.1/jquery.js" th:src="@{https://cdn.bootcss.com/jquery/1.11.1/jquery.js}"></script>
+    <!--额外的连接-->
+
+    <th:block th:replace="${links}"  />
+
+
+</head>
+<!--footer-->
+<div class="layui-full my-footer layui-bg-black" th:fragment="my-footer">
+
+    © layui.com - 底部固定区域
+</div>
+
+</body>
+</html>

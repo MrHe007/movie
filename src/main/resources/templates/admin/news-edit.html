@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: admin_header(~{::title},~{::link})">
+    <title th:text="${newsItem.title}">添加新闻</title>
+
+    <link rel="stylesheet" href="../css/movie-details.css" th:href="@{/css/admin/news-edit.css}">
+
+</head>
+<body>
+
+    <div class="main">
+
+        <!--表单-->
+        <!--<div class="form-div">-->
+
+            <form class="layui-form" method="post" action="/admin/news/editNewsItem" th:action="@{/admin/news/editNewsItem}">
+                <!--<input type="hidden" name="_method" value="put"/>-->
+                <input name="id" type="hidden" th:value="${newsItem.id}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b>标题</b></label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" th:value="${newsItem.title}" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b>时间</b></label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="date" id="date" th:value="${newsItem.date}" placeholder="请选择时间">
+                    </div>
+
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b>缩略图url</b></label>
+                    <div class="layui-input-inline" style="width: 700px;">
+                        <input type="text" class="layui-input" name="imgUrl" th:value="${newsItem.imgUrl}" id="img_url" placeholder="请输入图片链接">
+                        <input type="hidden" name="content" id="content">
+                        <input type="hidden" name="simpleText" id="simpleText">
+                        <!--<a href="http://www.layui.com" class="layui-btn">一个可跳转的按钮</a>-->
+                    </div>
+
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b>删除该新闻</b></label>
+                    <div class="layui-input-inline" style="width: 700px;">
+                        <input class="layui-btn layui-btn-danger" id="delBtn" th:value="删除">
+                    </div>
+
+                </div>
+
+
+
+        <!--</div>-->
+
+
+        <div id="div1" class="toolbar">
+        </div>
+        <div style="padding: 5px 0; color: #ccc"></div>
+        <div id="div2" class="text"> <!--可使用 min-height 实现编辑区域自动增加高度-->
+            <p>请输入内容</p>
+
+        </div>
+
+        <div class="btn-group">
+            <div class="layui-btn-group">
+                <input type="button" id="reset" value="重置"  class="layui-btn" />
+                <input type="submit" id="submit" value="提交" lay-submit lay-filter="formDemo" class="layui-btn" />
+            </div>
+        </div>
+
+    </form>
+
+
+    </div>
+
+
+    <script type="text/javascript" th:src="@{/js/wangEditor.min.js}" src="/js/wangEditor.min.js"></script>
+
+
+    <script type="text/javascript" th:inline="javascript">
+        var E = window.wangEditor
+        var editor = new E('#div1', '#div2')  // 两个参数也可以传入 elem 对象，class 选择器
+        editor.create()
+
+        editor.txt.html([[ ${newsItem.content} ]])
+
+    </script>
+
+<script th:inline="javascript">
+
+    layui.use(['layer','form','laydate'], function(){
+
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        var form = layui.form;
+        var laydate = layui.laydate;
+
+
+        $("#delBtn").click(function () {
+
+            layer.msg("确认删除吗？");
+
+            layer.confirm("确认删除？",function (index) {
+
+
+                var newsId = [[${newsItem.id}]];
+
+
+                // 连接请求，发送
+                location.href = "/admin/news/del/"+newsId;
+
+
+                console.log("")
+
+
+                layer.close(index);
+            });
+
+        });
+
+
+        // 监听表单
+
+        // alert(editor.txt.html())
+
+        form.on('submit(formDemo)', function(data){
+
+            var contentHtml = editor.txt.html();
+            var contentText = editor.txt.text();
+
+
+            // 手动将编辑区域的内容加进去
+            data.field.content = contentHtml;
+            // layer.msg(JSON.stringify(data.field));
+
+            // var title = $(".title").val();
+            // var tiem = $("#time").val();
+            // var img_url = $("#img_url").val();
+            $("#content").val(contentHtml);
+            $("#simpleText").val(contentText);
+
+            console.log(data.field);
+            console.log(contentHtml);
+
+            console.log(contentText);
+
+            return true;
+        });
+
+
+        // 监听图片缩略按钮，点击跳出弹出框
+
+        $("#pic_view").click(function () {
+
+            var url = $("#img_url").val();
+
+            // 弹出框显示图片
+            layer.open({
+                title:false
+                ,type: 2
+                ,area: ['500px', '500px']
+                ,content: [url,'no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                ,time: 5000
+                ,anim: 6
+
+            });
+
+
+        });
+
+        // 渲染时间选择
+        // /执行一个laydate实例
+        laydate.render({
+            elem: '#date' //指定元素
+            ,value:[[${newsItem.date}]]
+        });
+
+        // 重置 reset 按钮
+        $("#reset").click(function () {
+
+
+            layer.confirm("确定重置？",function (index) {
+
+                // 不在同一个 script 中但是可以调用
+                editor.txt.html('');
+
+                layer.close(index);
+            })
+
+        });
+
+    });
+
+</script>
+
+
+</body>
+</html>

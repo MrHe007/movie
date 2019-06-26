@@ -1,0 +1,26 @@
+.layui-container{
+	/*border: 1px solid red;*/
+}
+
+.main{
+	/*border:  1px solid forestgreen;*/
+}
+
+.title{
+	padding: 25px;
+}
+
+.subinfo{
+	/*margin-top: 30px;*/
+	margin-left: 20px;
+    color: #999;
+    font-size: 14px;
+	padding: 15px;
+}
+
+.news-content p{
+	color: #333;
+	font-size: 16px;
+	padding-top: 40px;
+	line-height: 1.75;
+}

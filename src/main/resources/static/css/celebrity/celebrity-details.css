@@ -1,0 +1,257 @@
+
+
+/*位置导航*/
+.position{
+	margin-top: 20px;
+	color: black;
+	font-size: 19px;
+	font-weight: 700;
+	border: 1px solid gainsboro;
+	padding: 5px;
+}
+
+.basicInfo{
+	margin-top: 10px;
+}
+
+.movie-content{
+	position: relative;
+	height: 300px;
+    border: #DEDEDE 1px solid;
+}
+
+.movie-content .movie-img{
+	margin-top: 20px;
+	margin-left: 20px;
+}
+.movie-content .movie-img img{
+	border: #DEDEDE 1px solid;
+}
+
+.movie-info{
+	position: absolute;
+	top: 10px;
+	left: 200px;
+}
+
+.movie-info>span{
+	display: block;
+	padding-top: 5px;
+	/*padding-bottom: 5px;*/
+}
+
+.span_block{
+	display: block;
+	padding-top: 5px;
+	
+}
+.font_888{
+	color: black;
+	font-weight: 700;
+}
+
+.span_block a{
+	display: inline-block;
+	text-decoration: none;
+	padding-right: 15px;
+}
+
+
+
+/*评价*/
+.comment{
+	margin-top: 30px;
+	border: 1px slid ;
+	padding: 10px;
+ 	border: #DEDEDE 1px solid;
+}
+
+
+
+/*介绍内容部分*/
+.intro-content{
+	margin-top: 20px;
+}
+
+/*每个 blicoquote*/
+.intro-content .intro-tab-item blockquote{
+	margin-top: 30px;
+	background: white; 
+	font-weight: 700;
+}
+
+/*每个 blicoquote 后面显示 全部*/
+.intro-content .all-content{
+	float: right;
+	color: grey;
+}
+
+.intro-content .intro-tab-item>div{
+	margin-top: 20px;
+}
+
+
+.intro-content .celebrities .celebrity-item{
+	/*margin-top: 20px;*/
+	display: inline-block;
+	border: 1px solid gray;
+	margin-right: 14px;
+	margin-bottom: 15px;
+	width: 128px;
+}
+
+.intro-content .celebrities .celebrity-item p{
+	text-align: center;
+	padding: 5px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.intro-content .celebrities .celebrity-item p a{
+	display: block;
+	width: 100%;
+	height: 100%;
+	/*background: #009688;*/
+	font-size: 14px;
+	/*font-weight: 700;*/
+}
+
+.intro-content .celebrities .celebrity-item p a:hover{
+	background:#5FB878 ;
+	color: white;
+	font-weight: 700;
+}
+
+/*图集*/
+.intro-content .intro-tab .intro-tab-item .imgs{
+	/*float: left;*/
+	/*margin: 10px;*/
+	overflow: hidden;
+} 
+
+.intro-content .intro-tab .intro-tab-item .imgs>div{
+	display: inline-block;
+	/*margin-left: 10px;*/
+	float: left;
+}
+
+.intro-content .intro-tab .intro-tab-item .imgs .small-img{
+	margin: 0 5px 5px 5px;
+}
+
+
+.intro-tab-item .comment-list-container>ul{
+	list-style: none;
+	
+}
+
+ .intro-tab-item .comment-list-container>ul li.comment-list-item{
+	width: 100%;
+    color: #666;
+	margin-bottom: 30px;
+	/*overflow: hidden;*/
+	/*background: grey;*/
+	/*border-bottom: 1px solid ;*/
+}
+
+
+ .intro-tab-item .comment-list-container>ul li.comment-list-item .user-info>div{
+ 	margin: 10px;
+ }
+
+ .intro-tab-item .comment-list-container>ul li.comment-list-item .user-info .user-img{
+ 	display: inline-block;
+	float: left;
+ }
+
+ .intro-tab-item .comment-list-container>ul li.comment-list-item .img-right{
+ 	/*display: inline-block;*/
+ 	float:left;
+ 	margin-left: 10px;
+ }
+ .intro-tab-item .comment-list-container>ul li.comment-list-item .img-right span{
+ 	font-size: 16px;
+ }
+ 
+ /*评论用户的名字*/
+.intro-tab-item .comment-list-container>ul li.comment-list-item .img-right .user-name{
+ 	color: #333;
+ 	/*color: red;*/
+ }
+
+ .intro-tab-item .comment-list-container>ul li.comment-list-item .comment-list-item-content{
+ 	padding-bottom: 30px;
+ 	border-bottom: 1px solid #e5e5e5;
+ }
+
+
+/*// 图片集panel*/
+.photo-list li{
+	float: left;
+	margin: 0 10px 10px 0;
+}
+
+
+/*演职人员-panel*/
+
+.celebrities-panel .celebrity-panel-item{
+	margin-top: 20px;
+}
+
+.celebrities-panel .celebrity-panel-item blockquote{
+	/*padding: 10px 10px 10px 0;*/
+	background: white;
+}
+
+.celebrities-panel .celebrity-panel-item .actors{
+	overflow: hidden;
+}
+.celebrities-panel .celebrity-panel-item .actor{
+	border: 1px solid gainsboro;
+	float: left;
+	width: 128px;
+	margin-left: 20px;
+	margin-top: 30px;
+	margin-bottom: 20px;
+}
+.celebrities-panel .celebrity-panel-item .actor .actor-info span{
+	display: block;
+	padding-top: 10px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	text-align: center;
+}
+
+	
+.celebrities-panel .celebrity-panel-item .actor .actor-info span.role{
+	color: #666;
+	padding-bottom: 10px;
+}
+
+ .celebrity-item-img>a{
+
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+
+ .celebrity-item-img img{
+	width: 128px;
+	height: 180px;
+}
+
+.comment-list-item .user-info .user-img img{
+	width: 50px;
+	height: 50px;
+}
+
+.comment-user-info span{
+	line-height: 40px;
+}
+
+.comment_list_item_score{
+	color: firebrick;
+	font-weight: 300;
+}

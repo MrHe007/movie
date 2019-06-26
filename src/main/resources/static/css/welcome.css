@@ -1,0 +1,37 @@
+
+
+.hc-body{
+	padding: 15px;
+}
+
+.layui-col-md2{
+	/*background: firebrick;*/
+}
+
+/*调节 row 的margin 值*/
+.layui-row-margin {
+    margin: 10px 5px 5px 5px;
+}
+
+.md2-sub1{
+	width: 40%;
+    text-align: center;
+    line-height: 80px;
+    float: left;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.md2-sub2{
+	display: inline-block;
+	width: 60%;
+	background-color: #f2f2f2;
+    line-height: 46px;
+    text-align: center;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.md2-sub2 span {
+    font-size: 25px;
+    display: block;
+    height: 34px;
+}

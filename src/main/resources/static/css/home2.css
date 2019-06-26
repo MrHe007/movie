@@ -1,0 +1,110 @@
+
+body{
+    /*font-size: 18px;*/
+
+}
+
+
+div.release{
+    text-align: center;
+    font-size: 12px;
+    color: gray;
+    font-weight: 400;
+    padding:5px 0 ;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.layui-layout-left .layui-nav-item a {
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+}
+
+
+
+.imgs{
+    /*margin-top: 10px;*/
+}
+
+
+.textcolor_red {
+    color: #ef4238!important;
+}
+
+.panel-header{
+    margin-top: 20px;
+}
+
+.panel .panel-header .panel-more{
+
+}
+.panel-title {
+    font-size: 26px;
+    /*color: #ffb400;*/
+}
+
+
+.panel-more{
+    float: right;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 35px;
+}
+.movie-list{
+    overflow: hidden;
+}
+
+.movie-list .movie-item {
+    border: 1px solid grey;
+    display: inline-block;
+    margin-top: 10px;
+    margin-right: 28px;
+    margin-bottom: 20px;
+    width: 160px;
+    float: left;
+    padding: 5px;
+}
+
+.movie-list .movie-item .movie-poster{
+    display: inline-block;
+    position: relative;
+}
+.movie-list .movie-item .movie-poster img{
+    width: 160px;
+    height: 220px;
+}
+
+.movie-list .movie-item .movie-poster .movie-info .movie-score{
+    background: #F57C00;;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 5px;
+}
+
+.movie-info{
+    width: 100%;
+}
+
+.movie-list .movie-item .movie-poster .movie-info .movie-title{
+    /*width: 150px;/*/
+    /*background: gray;*/
+    text-align: center;
+    font-size: 16px;
+    color: black;
+    font-weight: 400;
+    padding:5px 0 ;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+}
+
+/*.imgs div img{*/
+    /*width: 100%;*/
+/*}*/

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!--引入公共的静态资源片段-->
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+
+    <title>管理员登入</title>
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/css/admin/admin-login.css}" />
+    <!--<link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/css/common.css}" />-->
+
+</head>
+<body class="">
+
+<div class="layui-layout layui-layout-admin" style="position: relative;">
+<!--引入个公共的头部导航栏-->
+<div th:replace="common/common :: nav-header"></div>
+
+ 	<div class="layui-container">
+ 		
+ 		<div class="form-container top70" >
+ 			
+ 			<form class="layui-form" action="" th:action="@{/admin/login}" th:method="post">
+ 				<div class="layui-form-item">
+	 				
+ 				 <div class="layui-form-mid">
+				  	<h2>Admin登入</h2>
+				  </div>
+				  <div class="layui-form-mid layui-word-aux" style="float: right;margin-right: 100px;">
+				  	<a style="color: white;" href="#" th:href="@{/}">返回主页</a>
+				  </div>
+ 				</div>
+ 				
+ 				<div class="layui-form-item">
+ 					<div class="layui-input-inline">
+ 						<i class="layui-icon layui-icon-username form-icon"></i>
+ 						<input type="text" name="aname" required lay-verify="required" placeholder="请输入用户名或邮箱" autocomplete="off" class="layui-input"/>
+ 					</div>
+ 				</div>
+ 				<div class="layui-form-item">
+ 					
+ 					<div class="layui-input-inline">
+ 						<i class="layui-icon layui-icon-password form-icon"></i>
+ 						<input type="password" name="apassword" required lay-verify="required" placeholder="请输入您的密码" autocomplete="off" class="layui-input"/>
+ 					</div>
+ 				</div>
+ 				
+
+ 				<div class="layui-form-item">
+			    <div style="width: 360px;">
+			      <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="formDemo">登入</button>
+			    </div>
+		    </div>
+ 				
+ 			</form>
+ 			
+ 		</div>
+ 		
+ 	</div>
+</div>
+
+<script th:inline="javascript">
+//一般直接写在一个js文件中
+layui.use(['layer', 'form','element'], function(){
+  var layer = layui.layer, element = layui.elememt
+  ,form = layui.form, $ = layui.jquery;
+
+  // 后台返回来的数据
+    var msg = [[${msg}]];
+    console.log(msg);
+  // 如果状态码是500，表示登入出错
+  if(msg!=null ){
+        console.log(msg.code);
+      // 登入失败，加入样式
+      $("input").addClass("red-border");
+
+      layer.msg(msg.msg, {
+          icon: 0,
+          time: 2000, //2秒关闭（如果不配置，默认是3秒）
+          anim: 6
+      }, function(){
+          console.log("layer.msg success!");
+          $("input").removeClass("red-border");
+      });
+  }
+
+
+ 	form.on('submit(formDemo)',function(data){
+ 		
+ 		// layer.msg(JSON.stringify(data.field));
+
+        // 进行登入格式验证
+
+        console.log(data.field);
+
+
+
+
+
+
+
+        return true;
+ 		
+ 	});
+ 
+});
+</script> 
+</body>
+</html>

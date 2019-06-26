@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+    <meta charset="utf-8">
+    <title>layDate快速使用</title>
+    <link rel="stylesheet"  th:href="@{/css/user/user-info.css}">
+</head>
+
+<body>
+
+<div style="width: 1100px;">
+
+    <div style="margin-bottom: 5px;">
+
+        <!--&lt;!&ndash; 示例-970 &ndash;&gt;-->
+        <!--<ins class="adsbygoogle" style="display:inline-block;width:970px;height:90px"-->
+        <!--data-ad-client="ca-pub-6111334333458862" data-ad-slot="3820120620"></ins>-->
+    </div>
+
+    <div class="layui-btn-group demoTable">
+        <button class="layui-btn" data-type="getCheckData">导出选中行数据</button>
+        <button class="layui-btn" data-type="getCheckLength">获取选中数目</button>
+        <button class="layui-btn" data-type="isAll">验证是否全选</button>
+    </div>
+
+    <table class="layui-hide" id="test" lay-filter="demo">
+        <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+        <th lay-data="{field:'uid', width:80, sort: true, fixed: true}">ID</th>
+
+    </table>
+</div>
+
+<script type="text/html" id="barDemo">
+    <!--<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>-->
+    <!--<a class="layui-btn layui-btn-xs" lay-event="forbid">禁止显示</a>-->
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="checkboxTpl">
+    <!-- 这里的 checked 的状态只是演示 -->
+    <input type="checkbox" name="state" value="{{d.state}}" title="是否禁止" lay-filter="lockDemo" {{ d.state == 1 ? 'checked' : '' }}>
+</script>
+<script  type="text/javascript" id="blogType">
+</script>
+
+<script>
+    layui.use(['table','layer','form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        var url = "http://localhost/comment/get/list";
+
+        var ins1 = table.render({
+            elem: '#test',
+            id:'test'
+            ,url: url
+            ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            ,cols: [
+                [
+                {type:'checkbox'},
+                {field:'id', title: 'ID', sort: true}
+                ,{field:'mid', title: '电影ID'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                ,{field:'movieName', title: '影片名', sort: true}
+                ,{field:'score', title: '评分'}
+                ,{field:'uid', title: '用户ID'}
+                ,{field:'userName', title: '用户名', align: 'center'} //单元格内容水平居中
+                ,{field:'content', title: '内容', align: 'center'} //单元格内容水平居中
+                ,{field:'time', title: '时间', sort: true, align: 'right'} //单元格内容水平居中
+                ,{field:'lock', title:'是否禁止', width:110, templet: '#checkboxTpl', unresize: true}
+                ,{fixed: 'right', width:178, align:'center', toolbar: '#barDemo'}
+
+            ]
+            ]
+            ,page: true
+        });
+
+        var delUrl = "http://localhost/comment/del/";
+        var updateUrl = "http://localhost/comment/update/";
+
+        //监听锁定操作
+        form.on('checkbox(lockDemo)', function(obj){
+            // this.value 表示这个表单的值
+            // layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+            var id = obj.id;        // 评论ID
+            if(obj.elem.checked){
+                layer.tips("禁止", obj.othis);
+            }else{
+                layer.tips("打开", obj.othis);
+            }
+
+            var flag = obj.elem.checked;        // 发送ajax 修改状态
+
+            var val = this.val==1 ? 0: 1;       // 取反
+
+            $.ajax({
+                url:delUrl,
+                data:{
+                    state:val
+                },
+                success: function (msg) {
+                    console.log(msg);
+                }
+            });
+
+        });
+
+
+        //监听工具条 删除、修改、编辑
+        table.on('tool(demo)', function(obj){
+            var data = obj.data;
+            var id = data.id;
+            if(obj.event === 'detail'){
+                layer.msg('ID：'+ data.id + ' 的查看操作');
+            } else if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    obj.del();
+                    del += id;      // 加上 id
+                    // 发送ajax修改用户用户是否删除
+                    $.ajax({
+                        url:delUrl,
+                        success: function (msg) {
+                            console.log(msg);
+                        }
+                    });
+
+
+                    layer.close(index);
+                });
+            } else if(obj.event === 'forbid'){
+                layer.alert('编辑行：<br>'+ JSON.stringify(data))
+            }
+        });
+
+
+        var $ = layui.$, active = {
+            getCheckData: function(){ //获取选中数据
+                var checkStatus = table.checkStatus('test')
+                    ,data = checkStatus.data;
+
+                // 导出数据
+                table.exportFile(ins1.config.id, data);
+
+                layer.alert(JSON.stringify(data));
+            }
+            ,getCheckLength: function(){ //获取选中数目
+                var checkStatus = table.checkStatus('test')
+                    ,data = checkStatus.data;
+                layer.msg('选中了：'+ data.length + ' 个');
+            }
+            ,isAll: function(){ //验证是否全选
+                var checkStatus = table.checkStatus('test');
+                layer.msg(checkStatus.isAll ? '全选': '未全选')
+            }
+        };
+
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+  <meta charset="utf-8">
+  <title>layDate快速使用</title>
+    <link rel="stylesheet"  th:href="@{/css/blank.css}">
+
+</head>
+<body >
+<div class="layui-layout layui-layout-admin" style="position: relative;">
+
+    <div class="main" style="width: 800px;">
+            <div class="box" style="width: 800px; height: 400px;">
+                <div class="layui-card">
+                  <div class="layui-card-body">
+                    <div class="editForm" id="app">
+                        <form class="layui-form" action="" th:action="@{/user/edit}" th:method="post">
+                            <input type="hidden" name="uid" v-model="uid" >
+
+                          <div class="layui-form-item">
+                            <div class="layui-form-mid">
+                                <label class="layui-form-label layui-form-mid">头像</label>
+
+                            </div>
+                            <div class="layui-form-mid" style="cursor: pointer;">
+                                <img id="userImg"  src="" class="layui-nav-img"  style="width: 100px;height: 100px;">
+                            </div>
+
+                          </div>
+                          <div class="layui-form-item">
+                             <div class="layui-block">
+                                <label class="layui-form-label">用户名</label>
+                                <div class="layui-input-inline">
+                                  <input type="text" name="username" v-model="username" required lay-verify="required"   autocomplete="off" class="layui-input" disabled>
+                                </div>
+                            </div>
+                          </div>
+
+                          <div class="layui-form-item">
+                            <div class="layui-inline">
+                              <label class="layui-form-label">联系方式</label>
+                              <div class="layui-input-inline">
+                                <input type="tel" name="phone" v-model="phone" placeholder="请输入联系方式"  lay-verify="required|phone" autocomplete="off" class="layui-input" disabled>
+                              </div>
+                            </div>
+                            <div class="layui-inline">
+                              <label class="layui-form-label">邮箱</label>
+                              <div class="layui-input-inline">
+                                <input type="text" name="email" v-model="email" placeholder="请输入邮箱"  lay-verify="email" autocomplete="off" class="layui-input" disabled>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="layui-form-item">
+                            <label class="layui-form-label">出生年月</label>
+                            <div class="layui-input-block" style="width: 400px;">
+                              <input type="text" name="birthday" v-model="birthday" placeholder="请输入"  autocomplete="off" id="birth" class="layui-input" disabled>
+                            </div>
+                          </div>
+                        </form>
+                  </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+
+</div>
+
+<script>
+
+    function parentValTool(obj) {
+        let uid = obj;       //  得到父类传过来的值
+        var url = "http://localhost/api/user/" + uid+".json";
+        console.log("ajax : "+url);
+        var vm = new Vue({
+            el: "#app",
+            created() {
+                this.getUserDataById(uid)
+            },
+            data: {
+                uid:'',
+                username:'',
+                phone:'',
+                birthday:'',
+                email:''
+            },
+            methods: {
+                getUserDataById(uid){
+                    // ajax 获取用户数据
+                    this.$http.get(url,{
+                        params:{
+                            id:uid
+                        }
+                    }).then(function (res) {
+                        console.log(res.body);
+
+                        let user = res.body;
+                        this.uid = user.uid;
+                        this.username = user.username;
+                        this.email = user.email;
+                        this.phone = user.phone;
+                        this.birthday = user.birthday;
+
+                        $("#userImg").attr("src", user.imgUrl);         // 设置图片地址
+
+                    },function (res) {
+                        console.log("获取 "+ uid +"的user失败!");
+                    })
+                }
+            }
+        });
+
+
+
+
+    }
+
+</script>
+ 
+<script>
+layui.use(['laydate','form','upload'], function(){
+  var laydate = layui.laydate;
+  var form = layui.form;
+  var upload = layui.upload;
+
+});
+</script>
+</body>
+</html>

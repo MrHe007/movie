@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+
+    <title>腾讯影院</title>
+    <link rel="stylesheet" href="../css/movie-list.css" th:href="@{/css/movie/tx-movie-list.css}">
+
+</head>
+
+<body class="layui-layout layui-layout-admin" style="position: relative;">
+    <div class="layui-container top70" id="app">
+
+        <div th:replace="common/common :: nav-header"></div>
+
+        <div class="layui-container">
+
+            <!-- 头部 -->
+            <div class="movie-tags"  id="header">
+                <!--排序-->
+                <div class="category-div">
+                    <ul class="category">
+                        <li class="category-name tag">
+                            <button class="layui-btn layui-btn-normal">排序</button>
+                        </li>
+                        <!-- <li class="active"> -->
+                        <li v-for="(item,index) in headerData.sortType"  @click.prevent="position.sortIndex=index+1,clickTag()" :class="{'active': position.sortIndex==index+1 }">
+                            <a class="tag" :href="item.url | getTagKey"  >{{item.name}}</a> 
+                        </li>
+
+                    </ul>
+                </div>
+
+<!-- 地区 -->
+                <div>
+                    <!--地区-->
+                    <ul class="category">
+                        <li class="category-name">
+                            <button class="layui-btn  layui-btn-normal">地区</button>
+                        </li>
+                        <li v-for="(item,index) in headerData.areas"  @click.prevent="position.areaIndex=index+1,clickTag()" :class="{'active': position.areaIndex==index+1 }">
+                                <a class="tag" :href="item.url" >{{item.name}}</a> 
+                        </li>
+                        
+                    </ul>
+                </div>
+
+                <!--特色-->
+                <div class="category-div">
+                        <ul class="category">
+                            <li class="category-name">
+                                <button class="layui-btn  layui-btn-normal">特色</button>
+                            </li>
+                            <li v-for="(item,index) in headerData.features" @click.prevent="position.featureIndex=index+1,clickTag()" :class="{'active': position.featureIndex==index+1 }">
+                                    <a class="tag" :href="item.url" >{{item.name}}</a> 
+                            </li>
+    
+                        </ul>
+                    </div>
+
+                <!--年代-->
+                <div class="category-div">
+                    <ul class="category">
+                        <li class="category-name">
+                            <button class="layui-btn  layui-btn-normal">年代</button>
+                        </li>
+                        <li v-for="(item,index) in headerData.years"  @click.prevent="position.yearIndex=index+1,clickTag()" :class="{'active': position.yearIndex==index+1 }">
+                                <a class="tag" :href="item.url" >{{item.name}}</a> 
+                        </li>
+
+                    </ul>
+                </div>
+
+            <!--资费-->
+            <div class="category-div">
+                    <ul class="category">
+                        <li class="category-name">
+                            <button class="layui-btn  layui-btn-normal">资费</button>
+                        </li>
+                        <li v-for="(item,index) in headerData.charge" @click.prevent="position.chargeIndex=index+1,clickTag()" :class="{'active': position.chargeIndex==index+1 }">
+                                <a class="tag" :href="item.url" >{{item.name}}</a> 
+                        </li>
+
+                    </ul>
+                </div>
+
+            </div>
+
+            <!--中间的分割线-->
+            <hr class="layui-bg-blue" style="margin-top: 20px;margin-bottom: 20px;">
+
+            <!-- 电影列表 -->
+            <div class="movie-list-container" id="movieListId">
+
+                <div class="layui-row">
+
+                    <div class="layui-col-md12">
+
+                        <dl class="movie-list" >
+                            <dd class="movie-item" v-for="(item, index) in movieList" :key="index">
+                                <div class="movie-item-content">
+                                    <div class="movie-img" style="text-align: center;">
+                                        <a :href="rootUrl + item.movieUrl" :title="item.movieName">
+                                            <img :src="item.imgUrl" :title="item.movieName" />
+                                        </a>
+                                    </div>
+                                    <!--电影评分-->
+                                    <div class="movie-score">
+                                        <span>{{item.score}}</span>
+                                    </div>
+                                    <div class="movie-name">
+                                        <h4 style="text-align: center;">
+                                            <a :href="rootUrl + item.movieUrl" style="font-weight: 700;">{{item.movieName}}</a>
+                                            <span href="#" style="font-weight: 700;">{{item.stars}}</span>
+                                            <span href="#" style="font-weight: 700;">
+                                                <i class="layui-icon">&#xe6ed;</i>
+                                                {{item.viewCount}}
+                                            </span>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </dd>
+
+                            <!-- 没有更多了  , 用于定位懒加载 -->
+                            <h3 id="bottom"></h3>
+
+                        </dl>
+
+                    </div>
+
+                    <div class="layui-col-md3">
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+    <script src="../js/movie-list.js" th:src="@{/js/tx-movie-list.js}"></script>
+
+    <script>
+
+        var headerUrl = "http://localhost/api/movie/header.json";
+        var listUrl = "http://localhost/api/movie/plist.json";
+
+        // 头部header
+        var header = new Vue({
+            el:"#header",
+            created() {
+                this.getDataHeaderData();
+                // this.getMovieListData(this.currPage);
+            },
+            data:{
+                position:{
+                    sortIndex:1,
+                    areaIndex:1,
+                    featureIndex:1,
+                    yearIndex:1,
+                    chargeIndex:1
+                },
+                headerData: [],
+            },
+            methods:{
+                getDataHeaderData() {
+                    this.$http.get(headerUrl ).then(function (res) {
+                        // console.log(res);
+                        this.headerData = res.body;
+
+                    }, function () {
+                        console.log("请求 headerUrl失败！")
+                    });
+                },
+                clickTag(){
+
+                    let params = getParams(this)
+                    params.page = 0;        // 点击后相当于是第一页
+                    vm.movieList = []
+                    vm.getMovieListData(params);
+                    vm.currPage=1;          // 点击更新完后手动设置页面为1
+                    // debugger;
+                },
+            },
+            filters:{
+                getTagKey: function(val){
+                    // https://v.qq.com/x/list/movie?sort=18
+                    // 过滤出 sort=18
+                    let index = val.indexOf("?") +1;
+                    return val.substring(index);
+                }
+            }
+        });
+
+
+        // 电影列表
+        var vm = new Vue({
+            el: '#movieListId',
+            created() {
+                // this.getDataHeaderData();
+                // this.getMovieListData(this.currPage);
+            },
+            data: {
+                currPage:0,
+
+                movieList: [],
+                // tempList: [],
+                rootUrl:'http://jx.618g.com/?url=',
+
+            },
+            methods: {
+
+                getMovieListData: function(paramsTmp) {
+                    this.$http.get(listUrl,{
+                        params:{
+                            sort : paramsTmp.sort,
+                            iarea: paramsTmp.iarea,
+                            characteristic: paramsTmp.characteristic,
+                            year: paramsTmp.year,
+                            charge: paramsTmp.charge,
+                            offset: (paramsTmp.page-1)*30
+
+                        }
+                    }).then(function (res) {
+                        console.log("params: "+paramsTmp)
+                        // console.log(res);
+                        // this.movieList = res.body;
+                        let tempList = res.body;
+
+                        // console.log(tempList)
+
+                        // 加入新的数据
+                        this.movieList = [...this.movieList,...tempList]
+
+
+                    }, function () {
+                        console.log("请求 movie-list 失败！")
+                    });
+                }
+            }
+
+        });
+
+        // 监听属性的变化
+        vm.$watch('currPage',function (newValue, oldValue) {
+
+            //    console.log("currpage: "+newValue +" -- "+oldValue);
+
+        });
+
+
+        // layui
+        layui.use('flow', function(){
+
+            var flow = layui.flow;
+
+            flow.load({
+                elem: '#bottom' //流加载容器
+                // ,scrollElem: '#movieList' //滚动条所在元素，一般不用填，此处只是演示需要。
+                ,done: function(page, next){ //执行下一页的回调
+
+
+                    vm.currPage++;      // 页面数 +1
+                    console.log("page = " + vm.currPage);
+
+                    setTimeout(function(){
+                        var lis = [];
+
+                        // let params = {};
+
+                        // debugger
+                        let = params = getParams(header)
+                        params.page=vm.currPage;            // 注意这里的currPage 是vm里面的page，不是layui的 page
+                        // debugger
+                        vm.getMovieListData(params);
+
+
+                        //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                        // 判断是否可以继续加载
+                        next(lis.join(''), page < 100); //假设总页数为 10
+                    }, 500);
+
+                }
+            });
+
+        });
+
+    </script>
+
+</body>
+
+</html>

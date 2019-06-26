@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bigguy.movie.moviebox.mapper.CommentMapper">
+
+
+    <resultMap id="selectCommentListByMovieIdMap" type="com.bigguy.movie.moviebox.bean.Comment">
+        <id property="id" column="id" />
+        <result property="score" column="score" />
+        <result property="content" column="content" />
+        <result property="mid" column="mid" />
+        <association property="user" column="uid" select="com.bigguy.movie.moviebox.mapper.UserMapper.selectUserById" />
+    </resultMap>
+
+
+    <select id="selectCommentList" resultType="com.bigguy.movie.moviebox.dto.CommentRespDto">
+      SELECT *FROM COMMENT LIMIT #{start},#{limit}
+    </select>
+
+    <select id="selectCommentListByMovieId" resultMap="selectCommentListByMovieIdMap">
+      SELECT *FROM COMMENT c WHERE 1=1 AND c.mid = #{mid}
+    </select>
+
+
+</mapper>

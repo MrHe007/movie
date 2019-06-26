@@ -1,0 +1,11 @@
+.main{
+    width: 800px;
+    margin: 0 auto;
+}
+
+.box{
+    margin-top: 80px;
+    width: 800px;
+    height: 490px;
+    border: 8px solid gray;
+}

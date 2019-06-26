@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>开始使用layui</title>
+	<link rel="stylesheet" href="/webjars/layui/2.4.5/css/layui.css">
+	<link rel="stylesheet" href="/css/welcome.css">
+</head>
+<body class="hc-body">
+ 
+
+	<!--<div class="layui-container">-->
+		<blockquote class="layui-elem-quote">
+			欢迎管理员：admin！当前时间:
+            <span id="time"></span>
+		</blockquote>
+		
+
+<script src="/webjars/layui/2.4.5/layui.js"></script>
+<script src="https://cdn.bootcss.com/holder/2.9.6/holder.min.js"></script>
+<script>
+//一般直接写在一个js文件中
+layui.use(['layer', 'form','element'], function(){
+  var layer = layui.layer
+  ,element = layui.element,
+  $ = layui.jquery
+  ,form = layui.form;
+
+
+
+
+    Date.prototype.format = function(fmt)
+    { //author: meizz
+        var o = {
+            "M+" : this.getMonth()+1,                 //月份
+            "d+" : this.getDate(),                    //日
+            "h+" : this.getHours(),                   //小时
+            "m+" : this.getMinutes(),                 //分
+            "s+" : this.getSeconds(),                 //秒
+            "q+" : Math.floor((this.getMonth()+3)/3), //季度
+            "S"  : this.getMilliseconds()             //毫秒
+        };
+        if(/(y+)/.test(fmt))
+            fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+        for(var k in o)
+            if(new RegExp("("+ k +")").test(fmt))
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+        return fmt;
+    }
+
+
+    var time1 = new Date().format("yyyy-MM-dd hh:mm:ss");
+
+    $("#time").text(time1);
+
+});
+</script> 
+</body>
+</html>

@@ -1,0 +1,40 @@
+ /*去掉第一个 li 标签的关闭按钮图标*/
+ ul.layui-tab-title li:first-child i:last-child{
+	display: none;
+}
+
+/*设置了这个才可以把 box 撑开*/
+.content-body {
+    position: absolute;
+    top: 46px;
+    /*right: 0;*/
+    width: 100%;
+    bottom: 42px;
+    left: 200px;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.content-body .layui-tab-content {
+    position: absolute;
+    top:70px;
+    bottom: 0;
+    width: 100%;
+    padding: 0;
+    z-index: -999;
+    overflow: hidden;
+}
+
+.content-body .layui-tab-content .layui-tab-item {
+    height: 100%;
+}
+.content-body .layui-tab-content .layui-tab-item iframe {
+    height: 100%;
+}
+
+
+
+/*去掉nav-top 处悬浮显示下划线绿色的效果*/
+.layui-nav .layui-this:after,.layui-nav-bar,.layui-nav-tree .layui-nav-itemed:after {
+    background-color:transparent ;
+}

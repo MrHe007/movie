@@ -1,0 +1,38 @@
+
+  body{
+      /*background: url(img/login-bj.jpg);*/
+      position: relative;
+  }
+
+.form-container{
+    position: absolute;
+    top: 200px;
+    /*left: 600px;*/
+    padding-left: 50px;
+    padding-top: 50px;
+    width: 400px;
+    border: 1px solid gray;
+    /*background: rgba(6, 17, 47, 0.7);*/
+}
+
+.form-container .layui-input-inline{
+    /*width: 260px;*/
+    /*padding-right: 50px;*/
+    /*width: 100%;*/
+    width: 360px;
+    position: relative;
+}
+
+.form-container input{
+    /*border: 0;*/
+    background: none;
+    font-size: 14px;
+    text-indent: 2em;
+}
+
+.form-container .form-icon{
+    position: absolute;
+    top: 10px;
+    left: 5px;
+    font-size: 18px;
+}

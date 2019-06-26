@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+
+  <title>开始使用layui</title>
+  <link rel="stylesheet" href="../css/news-list.css" th:href="@{/css/news-list.css}">
+</head>
+<body>
+
+<div class="layui-layout layui-layout-admin" style="position: relative;">
+
+	<!--引入个公共的头部导航栏-->
+    <!--如果是管理员查看则不显示头部-->
+
+	<div th:replace="common/common :: nav-header" ></div>
+
+
+	<!--&lt;!&ndash;头部的导航栏&ndash;&gt;-->
+	<!--<div class="nav" style="width: 100%;height: 100px; background:green;">-->
+
+	<!--</div>-->
+
+
+	<div class="layui-container top70" >
+		
+		<div class="news-details-container">
+			
+			<div class="layui-row layui-col-space20">
+				
+				
+				<!--新闻列表-->
+				<div class="layu-col-md8">
+					<div class="news-list-container">
+
+                        <!--th:each="item : ${newsList}"-->
+						<dl class="news-list"  >
+
+                            <!--<dd class="news-item">-->
+                                <!--<a class="news-item-img" th:href="@{'/news/news-details/'+${item.id}}">-->
+                                    <!--&lt;!&ndash;<span th:text="${item.id}"></span>&ndash;&gt;-->
+                                    <!--<img src="" th:src="@{${item.imgUrl}}"/>-->
+                                <!--</a>-->
+                                <!--<div class="news-item-content">-->
+
+                                    <!--<h4 class="news-item-header one-line">-->
+                                        <!--<a href="#" th:text="${item.title}" th:href="@{'/news/news-details/'+${item.id} }">-->
+                                            <!--《密室逃生》上映口碑炸裂 观众热议成2019年初黑马-->
+                                        <!--</a>-->
+                                    <!--</h4>-->
+
+                                    <!--&lt;!&ndash;新闻的文字介绍&ndash;&gt;-->
+                                    <!--<div class="news-item-text" th:text="${item.simpleText}" >-->
+                                        <!--本周有好多值得一看的电影上映，类型包括惊悚悬疑片、动作片、宠物片、动画片、喜剧片等种类繁多，非常热闹。其中最引人瞩目的是2019年北美新片中的黑马、首周末票房亚军《密室逃生》。...-->
+                                    <!--</div>-->
+
+                                    <!--<div class="info-container">-->
+                                        <!--<span class="news-source">猫眼电影</span>-->
+                                        <!--<span class="news-date">01-19</span>-->
+                                        <!--<span class="tag">-->
+								            <!--<a href="#" title="密室逃生" >-->
+								              	<!--密室逃生-->
+								            <!--</a>-->
+								          <!--</span>-->
+                                        <!--<span class="images-view-count view-count">-->
+								      	<!--<i class="layui-icon layui-icon-log"></i>-->
+								      	<!--26</span>-->
+                                    <!--</div>-->
+
+                                <!--</div>-->
+                            <!--</dd>-->
+
+
+                            <!--<dd class="news-item">-->
+                                <!--<div class="news-item-img">-->
+                                    <!--<img src="holder.js/160x100"/>-->
+                                <!--</div>-->
+                                <!--<div class="news-item-content">-->
+
+                                    <!--<h4 class="news-item-header one-line">-->
+                                        <!--<a href="#">-->
+                                            <!--《密室逃生》上映口碑炸裂 观众热议成2019年初黑马-->
+                                        <!--</a>-->
+                                    <!--</h4>-->
+
+                                    <!--&lt;!&ndash;新闻的文字介绍&ndash;&gt;-->
+                                    <!--<div class="news-item-text">-->
+                                        <!--本周有好多值得一看的电影上映，类型包括惊悚悬疑片、动作片、宠物片、动画片、喜剧片等种类繁多，非常热闹。其中最引人瞩目的是2019年北美新片中的黑马、首周末票房亚军《密室逃生》。...-->
+                                    <!--</div>-->
+
+                                    <!--<div class="info-container">-->
+                                        <!--<span class="news-source">猫眼电影</span>-->
+                                        <!--<span class="news-date">01-19</span>-->
+                                        <!--<span class="tag">-->
+								            <!--<a href="#" title="密室逃生" >-->
+								              	<!--密室逃生-->
+								            <!--</a>-->
+								          <!--</span>-->
+                                        <!--<span class="images-view-count view-count">-->
+								      	<!--<i class="layui-icon layui-icon-log"></i>-->
+								      	<!--26</span>-->
+                                    <!--</div>-->
+
+                                <!--</div>-->
+                            <!--</dd>-->
+
+
+
+
+                        </dl>
+				
+					</div>
+
+                    <div id="page"></div>
+
+				</div>
+
+				
+				<!--推荐新闻-->
+				<div class="layui-col-md4">
+					
+				</div>
+				
+			</div>
+			
+		</div>
+		
+	</div>
+</div>
+
+<script  th:inline="javascript">
+//一般直接写在一个js文件中
+layui.use(['layer', 'form','laypage'], function(){
+  var layer = layui.layer
+  ,form = layui.form, laypage = layui.laypage;
+  var $ = layui.jquery;
+
+  var url = "/admin/news-list.json";
+  var data = {};
+
+
+  var count = [[${count}]];
+
+  laypage.render({
+          elem: 'page' //注意，这里的 test1 是 ID，不用加 # 号
+          ,count: count //数据总数，从服务端得到
+          ,jump: function(obj, first){
+            //obj包含了当前分页的所有参数，比如：
+            console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+            console.log(obj.limit); //得到每页显示的条数
+             console.log(first);
+            //首次不执行
+            if(!first){
+                //do something
+            }
+
+
+            //
+            data.curr = obj.curr;
+            data.limit = obj.limit;
+
+            $.getJSON(url,data,function (data) {
+
+                // 渲染
+                renderNewsList(data);
+
+            });
+      }
+  });
+
+
+    function renderNewsList(data) {
+
+        // 先清空后插入
+        $("dl.news-list").empty();
+
+        for( index in data){
+            elem = data[index];
+            console.log(elem);
+
+
+
+
+            var str = '<dd class="news-item">\n' +
+                '                                <a class="news-item-img" href="/news/news-details/'+elem.id+'" th:href="@{\'/news/news-details/\'+${item.id}}">\n' +
+                '                                    <!--<span th:text="${item.id}"></span>-->\n' +
+                '                                    <img th:src="@{${item.imgUrl}}" src="'+elem.imgUrl+'" />\n' +
+                '                                </a>\n' +
+                '                                <div class="news-item-content">\n' +
+                '\n' +
+                '                                    <h4 class="news-item-header one-line">\n' +
+                '                                        <a  th:text="${item.title}" th:href="@{\'/news/news-details/\'+${item.id} }" href="/news/news-details/'+elem.id+'"  >\n' +
+                '                                            ' +elem.title+
+                '                                        </a>\n' +
+                '                                    </h4>\n' +
+                '\n' +
+                '                                    <!--新闻的文字介绍-->\n' +
+                '                                    <div class="news-item-text" th:text="${item.simpleText}" >\n' +
+                '                                       ' + elem.simpleText +
+                '                                    </div>\n' +
+                '\n' +
+                '                                    <div class="info-container">\n' +
+                '                                        <span class="news-source">猫眼电影</span>\n' +
+                '                                        <span class="news-date">01-19</span>\n' +
+                '                                        <span class="tag">\n' +
+                '\t\t\t\t\t\t\t\t            <a href="#" title="密室逃生" >\n' +
+                '\t\t\t\t\t\t\t\t              \t密室逃生\n' +
+                '\t\t\t\t\t\t\t\t            </a>\n' +
+                '\t\t\t\t\t\t\t\t          </span>\n' +
+                '                                        <span class="images-view-count view-count">\n' +
+                '\t\t\t\t\t\t\t\t      \t<i class="layui-icon layui-icon-log"></i>\n' +
+                '\t\t\t\t\t\t\t\t      \t26</span>\n' +
+                '                                    </div>\n' +
+                '\n' +
+                '                                </div>\n' +
+                '                            </dd>';
+
+
+            $("dl.news-list").append(str);
+
+        }
+
+    }
+
+
+
+
+
+
+
+  
+//layer.msg('Hello World');
+});
+</script> 
+</body>
+</html>

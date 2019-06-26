@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+    <meta charset="utf-8">
+    <title>layDate快速使用</title>
+    <link rel="stylesheet"  th:href="@{/css/user/user-info.css}">
+</head>
+
+<body>
+    <div style="margin-bottom: 5px;">
+
+        <!--&lt;!&ndash; 示例-970 &ndash;&gt;-->
+        <!--<ins class="adsbygoogle" style="display:inline-block;width:970px;height:90px"-->
+            <!--data-ad-client="ca-pub-6111334333458862" data-ad-slot="3820120620"></ins>-->
+    </div>
+
+    <table class="layui-table" lay-data="{width: 1100, height:500, url:'http://localhost/admin/user/list', page:true, id:'idTest'}"
+        lay-filter="demo">
+        <thead>
+            <tr>
+                <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+                <th lay-data="{field:'uid', width:80, sort: true, fixed: true}">ID</th>
+                <th lay-data="{field:'username', width:80}">用户名</th>
+                <th lay-data="{field:'email', width:120, sort: true}">邮箱</th>
+                <th lay-data="{field:'imgUrl', width:120}">图片</th>
+                <th lay-data="{field:'phone', width:140}">电话</th>
+                <th lay-data="{field:'birthday', width:100, sort: true}">生日</th>
+                <th lay-data="{field:'state', width:150, sort: true,templet: '#checkboxTpl'}">是否允许登入</th>
+                <th lay-data="{fixed: 'right', width:178, align:'center', toolbar: '#barDemo'}"></th>
+            </tr>
+        </thead>
+    </table>
+
+    <script type="text/html" id="barDemo">
+          <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+          <a class="layui-btn layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+    <script type="text/html" id="checkboxTpl">
+        <!-- 这里的 checked 的状态只是演示 -->
+        <input type="checkbox" name="state" value="{{d.state}}" title="是否允许" lay-filter="lockDemo" {{ d.state == 1 ? 'checked' : '' }}>
+    </script>
+
+
+    <script>
+        layui.use(['table','layer','form'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+
+            var userUrl = "http://localhost/api/user/"        //REST风格 ，进行修改、删除数据
+            //监听表格复选框选择
+            table.on('checkbox(demo)', function (obj) {
+                console.log(obj)
+            });
+
+
+            //监听是否登入操作
+            form.on('checkbox(lockDemo)', function(obj){
+                layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+                var flag = obj.othis;       // 是否禁用户登入
+                // 根据
+                var state = this.value;
+                state = state==0 ? 1 : 0;    // 取反
+                var url = userUrl +"put/"+ uid ;
+                $.ajax({
+                    url: url,
+                    data:{
+                        state:state
+                    },
+                    success:function (data) {
+                        console.log(data);
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                });
+
+
+            });
+
+            //监听工具条
+            table.on('tool(demo)', function (obj) {
+                var data = obj.data;
+                var uid = data.uid;     // 拿到用户ID
+
+                if (obj.event === 'detail') {
+                    layer.msg('ID：' + data.uid + ' 的查看操作');
+
+                    var uid = data.uid;     // 拿到用户ID
+                    // 弹出框
+
+                    layer.open({
+                        type: 2,
+                        title:'用户信息',
+                        content: ['http://localhost/page/admin/user-info.html','no'],
+                        area: ['820px', '470px'],
+                        success:function (layero,index) {
+                            var iframe = window[layero.find('iframe')[0]['name']];
+                            iframe.parentValTool(uid);             // 将id传给子类
+                        }
+                    });
+
+
+                } else if (obj.event === 'del') {
+
+                    layer.confirm('真的删除行么', function (index) {
+                        obj.del();          // 只是在这里删掉，并没有从数据库里面删掉
+                        var url = userUrl +"del/"+ uid ;
+                        // 发送ajax 删除数据
+                        console.log("准备删除数据 : "+url)
+                        var url = userUrl +"del/"+ uid ;
+                        $.ajax({
+                            url: url,
+                            success:function (data) {
+                                console.log(data);
+                            },
+                            error: function (msg) {
+                                console.log(msg);
+                            }
+                        });
+
+
+                        layer.close(index);
+                    });
+                } else if (obj.event === 'forbid') {
+                    layer.alert('编辑行：<br>' + JSON.stringify(data));
+                    layer.confirm('真的禁止登入么？', function (index) {
+                        console.log("准备禁止")
+                        // 发送ajax 禁止用户登入
+                        var url = userUrl +"put/"+ uid ;
+                        $.ajax({
+                            url: url,
+                            success:function (data) {
+                                console.log(data);
+                            },
+                            error: function (msg) {
+                                console.log(msg);
+                            }
+                        });
+
+                        layer.close(index);
+                    });
+                }
+            });
+
+            var $ = layui.$, active = {
+                getCheckData: function () { //获取选中数据
+                    var checkStatus = table.checkStatus('idTest')
+                        , data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                }
+                , getCheckLength: function () { //获取选中数目
+                    var checkStatus = table.checkStatus('idTest')
+                        , data = checkStatus.data;
+                    layer.msg('选中了：' + data.length + ' 个');
+                }
+                , isAll: function () { //验证是否全选
+                    var checkStatus = table.checkStatus('idTest');
+                    layer.msg(checkStatus.isAll ? '全选' : '未全选')
+                }
+            };
+
+            $('.demoTable .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        });
+    </script>
+  
+</body>
+
+</html>

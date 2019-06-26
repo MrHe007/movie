@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>safe-setting</title>
+	<link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/webjars/layui/2.4.5/css/layui.css}" />
+	<script src="../layui/layui.js" th:src="@{/webjars/layui/2.4.5/layui.js}"></script>
+  <style>
+  	
+  	.admin-form{
+  		margin-top: 100px;
+  		margin-left: 100px;
+  		width: 800px;
+  	}
+  	
+  </style>
+  
+</head>
+<body>
+ 
+	<div class="box">
+		
+		<div class="admin-form">
+			
+			<form class="layui-form" action="" method="POST" th:action="@{/admin/}">
+			<input type="hidden" name="_method" value="PUT">
+			  <div class="layui-form-item">
+			    <label class="layui-form-label">用户名</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="aname" readonly="readonly" required value="何称" th:value="${session.admin.aname}" lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input layui-disabled">
+			    </div>
+			  </div>
+			  <div class="layui-form-item">
+			    <label class="layui-form-label">旧密码</label>
+			    <div class="layui-input-inline">
+			      <input type="password" name="apassword" required lay-verify="required" placeholder="请输入原始密码" autocomplete="off" class="layui-input">
+			    </div>
+			  </div>
+			  <div class="layui-form-item">
+			    <label class="layui-form-label">新密码</label>
+			    <div class="layui-input-block">
+			      <input type="password" name="newPass" required lay-verify="required" placeholder="请输新入密码" autocomplete="off" class="layui-input">
+			    </div>
+			  </div>
+			  <div class="layui-form-item">
+			    <label class="layui-form-label">确认密码</label>
+			    <div class="layui-input-block">
+			      <input type="password" name="reNewPass" required lay-verify="required" placeholder="请输确认新密码" autocomplete="off" class="layui-input">
+			    </div>
+			  </div>
+			 
+			  <div class="layui-form-item">
+			    <div class="layui-input-block">
+			      <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+			      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+			    </div>
+			  </div>
+			</form>
+			
+		</div>
+
+	</div>
+
+ 
+<script src="https://cdn.bootcss.com/holder/2.9.6/holder.min.js"></script>
+<script th:inline="javascript">
+//一般直接写在一个js文件中
+layui.use(['layer', 'form','element'], function(){
+  var layer = layui.layer
+  ,element = layui.element,
+  $ = layui.jquery
+  ,form = layui.form;
+
+
+    var msg = [[${msg}]];
+
+    if(null != msg ){
+
+        layer.msg(msg.msg);
+
+        if(405==msg.code){
+			// 显示密码框为红色的
+            $("input[name='apassword']").css({'border':'1px solid red'});
+
+            // 设置定时器， 3s 后去掉红色框框
+            setTimeout(function(){
+                $("input[name='apassword']").css({'border':'1px solid #e6e6e6'});
+            },3000);
+		}
+
+    }
+  
+  //监听提交
+  form.on('submit(formDemo)', function(data){
+//  layer.msg(JSON.stringify(data.field));
+    
+//  debugger
+    
+    fields = data.field; 
+    var pass = fields['password'];
+    var newPass = fields['newPass'];
+    var reNewPass = fields['reNewPass'];
+    
+    var flag = true;		// 表单校验是否提交
+    
+    if(newPass != reNewPass){
+    	layer.msg("两次密码输入不一致");
+    	flag = false;
+    	// 使输入框变红色
+    	$("input[name='newPass']").css({'border':'1px solid red'});
+    	$("input[name='reNewPass']").css({'border':'1px solid red'});
+    	
+    	// 定时器，3s后去掉红色的框框
+    	setTimeout(function(){
+    		$("input[name='newPass']").css({'border':'1px solid #e6e6e6'});
+    		$("input[name='reNewPass']").css({'border':'1px solid #e6e6e6'});
+    	},3000);
+
+    }
+    
+    
+    
+    return flag;
+    
+  });
+  
+  
+//layer.msg('Hello World');
+});
+</script> 
+</body>
+</html>

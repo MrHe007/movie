@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!--引入公共的静态资源片段-->
+<head th:replace="common/common :: common_header(~{::title},~{::link})">
+
+    <title>开始使用layui</title>
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/css/login.css}" />
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/css/common.css}" />
+
+</head>
+<body>
+ 
+ 	<div class="layui-container">
+ 		
+ 		<div class="form-container" >
+ 			
+ 			<form class="layui-form" action="" th:action="@{/login2}" th:method="post">
+ 				<div class="layui-form-item">
+	 				
+ 				 <div class="layui-form-mid">
+				  	<h2>账号登入</h2>
+				  </div>
+				  <div class="layui-form-mid layui-word-aux" style="float: right;margin-right: 100px;">
+				  	<a href="#" th:href="@{/s}">返回主页</a>
+				  </div>
+ 				</div>
+ 				
+ 				<div class="layui-form-item">
+ 					<div class="layui-input-inline">
+ 						<i class="layui-icon layui-icon-username form-icon"></i>
+ 						<input type="text" name="username" required lay-verify="required" placeholder="请输入用户名或邮箱" autocomplete="off" class="layui-input"/>
+ 					</div>
+ 				</div>
+ 				<div class="layui-form-item">
+ 					
+ 					<div class="layui-input-inline">
+ 						<i class="layui-icon layui-icon-password form-icon"></i>
+ 						<input type="password" name="password" required lay-verify="required" placeholder="请输入您的密码" autocomplete="off" class="layui-input"/>
+ 					</div>
+ 				</div>
+ 				
+ 				<div class="layui-form-item" >
+ 					 <div class="layui-form-mid">
+				  	<a href="#">注册账号</a>
+				  </div>
+				  <div class="layui-form-mid layui-word-aux" style="float: right;margin-right: 100px;">
+				  	<a href="#" style="color: red;">忘记密码?</a>
+				  </div>
+ 				</div>
+ 				
+ 				<div class="layui-form-item">
+			    <div style="width: 360px;">
+			      <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="formDemo">登入</button>
+			    </div>
+		    </div>
+ 				
+ 			</form>
+ 			
+ 		</div>
+ 		
+ 	</div>
+ 
+
+<script th:inline="javascript">
+//一般直接写在一个js文件中
+layui.use(['layer', 'form','element'], function(){
+  var layer = layui.layer, element = layui.elememt
+  ,form = layui.form, $ = layui.jquery;
+    var flag = false;
+
+    var log = [[${msg}]];
+    console.log(log);
+    console.log([[${msg.code}]]);
+
+
+ 	form.on('submit(formDemo)',function(data){
+ 		
+ 		// layer.msg(JSON.stringify(data.field));
+
+        return true;
+ 		
+ 	});
+ 
+});
+</script> 
+</body>
+</html>

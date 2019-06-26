@@ -1,0 +1,32 @@
+body{
+    padding: 15px;
+}
+
+.main{
+    width: 80%;
+    border: 1px solid grey;
+    padding: 25px;
+}
+
+.toolbar {
+    border: 1px solid #ccc;
+    /*height: 60px;*/
+    width: 85%;
+}
+
+.text {
+    border: 1px solid #ccc;
+    width: 85%;
+    /*设置高度*/
+    height: 600px;
+}
+
+.btn-group{
+    width: 80%;
+    /*border: 1px solid red;*/
+    margin-top: 25px;
+    overflow: hidden;
+}
+.btn-group input{
+    margin-right: 15px;
+}

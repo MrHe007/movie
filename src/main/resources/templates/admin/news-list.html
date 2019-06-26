@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: admin_header(~{::title},~{::link})">
+
+  <title>开始使用layui</title>
+  <link rel="stylesheet" href="../css/news-list.css" th:href="@{/css/news/news-list-edit.css}">
+
+</head>
+<body>
+
+<div class="layui-layout layui-layout-admin" style="position: relative;">
+
+    <div class="news-details-container">
+
+        <div class="layui-row layui-col-space20">
+
+            <!--新闻列表-->
+            <div class="layu-col-md8">
+                <div class="news-list-container">
+
+                    <!--th:each="item : ${newsList}"-->
+                    <dl class="news-list"  >
+
+                    </dl>
+
+                </div>
+
+                <div id="page"></div>
+
+            </div>
+
+
+            <!--推荐新闻-->
+            <div class="layui-col-md4">
+
+            </div>
+
+        </div>
+
+    </div>
+		
+	</div>
+<!--</div>-->
+
+
+
+
+<script  th:inline="javascript">
+//一般直接写在一个js文件中
+layui.use(['layer', 'form','laypage'], function(){
+  var layer = layui.layer
+  ,form = layui.form, laypage = layui.laypage;
+  var $ = layui.jquery;
+
+  var url = "/admin/news-list.json";
+  var data = {};
+
+
+  var count = [[${count}]];
+
+  laypage.render({
+          elem: 'page' //注意，这里的 test1 是 ID，不用加 # 号
+          ,count: count //数据总数，从服务端得到
+          ,jump: function(obj, first){
+            //obj包含了当前分页的所有参数，比如：
+            console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+            console.log(obj.limit); //得到每页显示的条数
+             console.log(first);
+            //首次不执行
+            if(!first){
+                //do something
+            }
+
+
+            //
+            data.curr = obj.curr;
+            data.limit = obj.limit;
+
+            $.getJSON(url,data,function (data) {
+
+                // 渲染
+                renderNewsList(data);
+
+            });
+      }
+  });
+
+
+    function renderNewsList(data) {
+
+        // 先清空后插入
+        $("dl.news-list").empty();
+
+        for( index in data){
+            elem = data[index];
+            // console.log(elem);
+
+
+            var str = '<dd class="news-item">\n' +
+                '                                <a class="news-item-img" href="/admin/news-details/'+elem.id+'" th:href="@{\'/news/news-details/\'+${item.id}}">\n' +
+                '                                    <!--<span th:text="${item.id}"></span>-->\n' +
+                '                                    <img th:src="@{${item.imgUrl}}" src="'+elem.imgUrl+'" />\n' +
+                '                                </a>\n' +
+                '                                <div class="news-item-content">\n' +
+                '\n' +
+                '                                    <h4 class="news-item-header one-line">\n' +
+                '                                        <a  th:text="${item.title}" th:href="@{\'/news/news-details/\'+${item.id} }" href="/admin/news-details/'+elem.id+'"  >\n' +
+                '                                            ' +elem.title+
+                '                                        </a>\n' +
+                '                                    </h4>\n' +
+                '\n' +
+                '                                    <!--新闻的文字介绍-->\n' +
+                '                                    <div class="news-item-text" th:text="${item.simpleText}" >\n' +
+                '                                       ' + elem.simpleText +
+                '                                    </div>\n' +
+                '\n' +
+                '                                    <div class="info-container">\n' +
+                '                                        <span class="news-source">猫眼电影</span>\n' +
+                '                                        <span class="news-date">01-19</span>\n' +
+                '                                        <span class="tag">\n' +
+                '\t\t\t\t\t\t\t\t            <a href="#" title="密室逃生" >\n' +
+                '\t\t\t\t\t\t\t\t              \t密室逃生\n' +
+                '\t\t\t\t\t\t\t\t            </a>\n' +
+                '\t\t\t\t\t\t\t\t          </span>\n' +
+                '                                        <span class="images-view-count view-count">\n' +
+                '\t\t\t\t\t\t\t\t      \t<i class="layui-icon layui-icon-log"></i>\n' +
+                '\t\t\t\t\t\t\t\t      \t26</span>\n' +
+                '                                    </div>\n' +
+                '\n' +
+                '                                </div>\n' +
+                '                            </dd>';
+
+            $("dl.news-list").append(str);
+
+        }
+
+    }
+
+
+
+
+
+
+
+  
+//layer.msg('Hello World');
+});
+</script> 
+</body>
+</html>
